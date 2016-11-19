@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.linqs.psl.evaluation.resultui.printer;
+package org.linqs.psl.utils.evaluation.resultui.printer;
 
 import org.linqs.psl.model.atom.*;
 

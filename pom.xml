@@ -43,6 +43,7 @@
 	
 	<modules>
 		<module>psl-experimental</module>
+		<module>psl-mosek</module>
 	</modules>
 
 	<repositories>

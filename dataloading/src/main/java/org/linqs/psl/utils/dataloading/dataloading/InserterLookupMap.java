@@ -15,12 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.linqs.psl.utils.loading;
+package org.linqs.psl.utils.dataloading;
+
+import java.util.HashMap;
 
 import org.linqs.psl.database.loading.Inserter;
 
-public interface InserterLookup {
+public class InserterLookupMap extends HashMap<String,Inserter> implements InserterLookup {
 
-	public Inserter get(String predicateName);
-	
+	private static final long serialVersionUID = 8610693255851713724L;
+
+	@Override
+	public Inserter get(String predicateName) {
+		return super.get(predicateName);
+	}
+
 }

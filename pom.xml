@@ -40,10 +40,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	
+
 	<modules>
 		<module>psl-experimental</module>
-		<module>psl-reasoner</module>
+		<module>psl-graph</module>
 	</modules>
 
 	<repositories>

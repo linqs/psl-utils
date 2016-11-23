@@ -15,12 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.linqs.psl.utils.loading;
+package org.linqs.psl.utils.dataloading.graph;
 
-import org.linqs.psl.database.loading.Inserter;
+public interface RelationType {
 
-public interface InserterLookup {
-
-	public Inserter get(String predicateName);
+	public boolean isSoft();
+	
+	public boolean isSymmetric();
+	
+	public int arity();
+	
+	public boolean hasAttributes();
 	
 }

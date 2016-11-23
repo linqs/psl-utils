@@ -24,12 +24,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.linqs.psl.database.Database;
-import org.linqs.psl.evaluation.statistics.filter.AtomFilter;
 import org.linqs.psl.model.atom.GroundAtom;
 import org.linqs.psl.model.atom.ObservedAtom;
 import org.linqs.psl.model.predicate.Predicate;
 import org.linqs.psl.model.term.Constant;
-import org.linqs.psl.util.database.Queries;
+import org.linqs.psl.utils.database.Queries;
+import org.linqs.psl.utils.evaluation.statistics.filter.AtomFilter;
 
 public class DiscretePredictionComparator implements PredictionComparator {
 	

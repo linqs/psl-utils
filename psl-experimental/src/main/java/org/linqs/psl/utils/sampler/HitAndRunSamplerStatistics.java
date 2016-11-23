@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.linqs.psl.util.concurrent.AtomicDouble;
+import org.linqs.psl.utils.concurrent.AtomicDouble;
 
 import com.google.common.base.Preconditions;
 

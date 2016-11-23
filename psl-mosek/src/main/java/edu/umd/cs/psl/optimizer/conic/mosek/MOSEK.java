@@ -33,14 +33,14 @@ import cern.colt.matrix.tdouble.DoubleMatrix1D;
 import cern.colt.matrix.tdouble.impl.SparseCCDoubleMatrix2D;
 import org.linqs.psl.config.ConfigBundle;
 import org.linqs.psl.config.ConfigManager;
-import org.linqs.psl.optimizer.conic.ConicProgramSolver;
-import org.linqs.psl.optimizer.conic.program.ConeType;
-import org.linqs.psl.optimizer.conic.program.ConicProgram;
-import org.linqs.psl.optimizer.conic.program.LinearConstraint;
-import org.linqs.psl.optimizer.conic.program.NonNegativeOrthantCone;
-import org.linqs.psl.optimizer.conic.program.RotatedSecondOrderCone;
-import org.linqs.psl.optimizer.conic.program.SecondOrderCone;
-import org.linqs.psl.optimizer.conic.program.Variable;
+import org.linqs.psl.reasoner.conic.optimizer.ConicProgramSolver;
+import org.linqs.psl.reasoner.conic.optimizer.program.ConeType;
+import org.linqs.psl.reasoner.conic.optimizer.program.ConicProgram;
+import org.linqs.psl.reasoner.conic.optimizer.program.LinearConstraint;
+import org.linqs.psl.reasoner.conic.optimizer.program.NonNegativeOrthantCone;
+import org.linqs.psl.reasoner.conic.optimizer.program.RotatedSecondOrderCone;
+import org.linqs.psl.reasoner.conic.optimizer.program.SecondOrderCone;
+import org.linqs.psl.reasoner.conic.optimizer.program.Variable;
 
 public class MOSEK implements ConicProgramSolver {
 	

@@ -15,18 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.linqs.psl.optimizer.conic.mosek;
+package org.linqs.psl.utils.concurrent;
 
-import org.linqs.psl.config.ConfigBundle;
-import org.linqs.psl.reasoner.conic.optimizer.ConicProgramSolver;
-import org.linqs.psl.reasoner.conic.optimizer.ConicProgramSolverFactory;
+public class AtomicDouble {
 
-public class MOSEKFactory implements ConicProgramSolverFactory {
-
-	@Override
-	public ConicProgramSolver getConicProgramSolver(ConfigBundle config)
-			throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-		return new MOSEK(config);
+	private double val;
+	
+	public AtomicDouble() {}
+	
+	public AtomicDouble(double v) {
+		val = v;
 	}
-
+	
+	public synchronized void set(double v) {
+		val = v;
+	}
+	
+	public synchronized double get() {
+		return val;
+	}
+	
+	public synchronized double increment(double inc) {
+		val += inc;
+		return val;
+	}
+	
+	
+	
 }

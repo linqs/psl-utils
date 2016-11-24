@@ -44,6 +44,7 @@
 	<modules>
 		<module>psl-experimental</module>
 		<module>psl-graph</module>
+		<module>psl-textsim</module>
 	</modules>
 
 	<repositories>

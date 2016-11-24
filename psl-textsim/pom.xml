@@ -20,11 +20,11 @@
 			xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.linqs</groupId>
-	<artifactId>psl-graph</artifactId>
-	<name>psl-graph</name>
+	<artifactId>psl-textsim</artifactId>
+	<name>psl-textsim</name>
 	<version>CANARY</version>
 	<packaging>jar</packaging>
-	<description>Graph representation and utilities.</description>
+	<description>Text similarity extensions to the PSL software from the LINQS research group.</description>
 	<parent>
 		<groupId>org.linqs</groupId>
 		<artifactId>psl-utils</artifactId>

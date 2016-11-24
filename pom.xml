@@ -42,9 +42,10 @@
 	</properties>
 
 	<modules>
+		<module>psl-dataloading</module>
+		<module>psl-evaluation</module>
 		<module>psl-graph</module>
 		<module>psl-textsim</module>
-		<module>psl-evaluation</module>
 	</modules>
 
 	<repositories>

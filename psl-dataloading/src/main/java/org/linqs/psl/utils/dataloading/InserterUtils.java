@@ -26,8 +26,8 @@ import org.linqs.psl.database.loading.Inserter;
 import org.linqs.psl.model.predicate.Predicate;
 import org.linqs.psl.model.predicate.PredicateFactory;
 import org.linqs.psl.model.predicate.StandardPredicate;
-import org.linqs.psl.ui.data.file.util.DelimitedObjectConstructor;
-import org.linqs.psl.ui.data.file.util.LoadDelimitedData;
+import org.linqs.psl.utils.dataloading.file.DelimitedObjectConstructor;
+import org.linqs.psl.utils.dataloading.file.LoadDelimitedData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

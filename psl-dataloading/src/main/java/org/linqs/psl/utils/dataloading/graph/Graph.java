@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import org.linqs.psl.ui.data.file.util.DelimitedObjectConstructor;
-import org.linqs.psl.ui.data.file.util.LoadDelimitedData;
+import org.linqs.psl.utils.dataloading.file.DelimitedObjectConstructor;
+import org.linqs.psl.utils.dataloading.file.LoadDelimitedData;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;

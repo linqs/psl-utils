@@ -78,7 +78,7 @@ public class DiscretePredictionComparator implements PredictionComparator {
 	@Override
 	public DiscretePredictionStatistics compare(Predicate p) {
 		countResultDBStats(p);
-		//System.out.println("tp " + tp + " fp " + fp + " tn " + tn + " fn " + fn);
+        //System.out.println("TEST:\ntp " + tp + " fp " + fp + " tn " + tn + " fn " + fn);
 		return new DiscretePredictionStatistics(tp, fp, tn, fn, threshold, errors, correctAtoms);
 	}
 	
@@ -110,6 +110,7 @@ public class DiscretePredictionComparator implements PredictionComparator {
 		}
 		
 		tn = maxBaseAtoms - tp - fp - fn;
+        //System.out.println("TEST:\ntp " + tp + " fp " + fp + " tn " + tn + " fn " + fn);
 		return new DiscretePredictionStatistics(tp, fp, tn, fn, threshold, errors, correctAtoms);
 	}
 	
@@ -143,7 +144,7 @@ public class DiscretePredictionComparator implements PredictionComparator {
 			if (baselineAtom instanceof ObservedAtom) {
 				actual = (resultAtom.getValue() >= threshold);
 				expected = (baselineAtom.getValue() >= threshold);
-				if (actual && expected || !actual && !expected) {
+				if ((actual && expected) || (!actual && !expected)) {
 					// True negative
 					if (!actual)
 						tn++;

@@ -144,4 +144,44 @@ public class DiscretePredictionComparatorTest {
 				assertEquals(26.0/30.0, acc, 1e-10);
 		}		
 	}
+
+	@Test
+	public void testPrecisionNegativeClass() {
+		for (double thresh = 0.1; thresh <= 1.0; thresh += 0.1) {
+			comparator.setThreshold(thresh);
+			DiscretePredictionStatistics comparison = comparator.compare(predicate, 6*5);
+			double prec = comparison.getPrecision(DiscretePredictionStatistics.BinaryClass.NEGATIVE);
+			if (thresh <= 0.8)
+				assertEquals(24.0/25.0, prec, 1e-10);
+			else
+				assertEquals(26.0/30.0, prec, 1e-10);
+		}
+	}
+	
+	@Test
+	public void testRecallNegativeClass() {
+		for (double thresh = 0.1; thresh <= 1.0; thresh += 0.1) {
+			comparator.setThreshold(thresh);
+			DiscretePredictionStatistics comparison = comparator.compare(predicate, 6*5);
+			double recall = comparison.getRecall(DiscretePredictionStatistics.BinaryClass.NEGATIVE);
+			if (thresh <= 0.8)
+				assertEquals(24.0/26.0, recall, 1e-10);
+			else
+				assertEquals(1.0, recall, 1e-10);
+		}		
+	}
+	
+	@Test
+	public void testF1NegativeClass() {
+		for (double thresh = 0.1; thresh <= 1.0; thresh += 0.1) {
+			comparator.setThreshold(thresh);
+			DiscretePredictionStatistics comparison = comparator.compare(predicate, 6*5);
+			double f1 = comparison.getF1(DiscretePredictionStatistics.BinaryClass.NEGATIVE);
+			if (thresh <= 0.8)
+				assertEquals(16.0/17.0, f1, 1e-10);
+			else
+				assertEquals(13.0/14.0, f1, 1e-10);
+		}		
+	}
+	
 }

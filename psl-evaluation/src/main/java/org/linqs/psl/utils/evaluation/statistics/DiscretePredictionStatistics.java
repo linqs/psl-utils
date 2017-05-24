@@ -115,13 +115,13 @@ public class DiscretePredictionStatistics implements PredictionStatistics {
 			double n = tn + fp;
 			if (n == 0.0)
 				return 1.0;
-			return tn/(tn+fp);
+			return tn/n;
 		}
 		else {
 			double p = tp + fn;
 			if (p == 0.0)
 				return 1.0;
-			return tp/(p);
+			return tp/p;
 		}
 	}
 	

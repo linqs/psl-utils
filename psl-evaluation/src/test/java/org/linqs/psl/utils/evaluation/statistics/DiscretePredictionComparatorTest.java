@@ -60,6 +60,9 @@ public class DiscretePredictionComparatorTest {
 		Database baseline = ds.getDatabase(ds.getPartition("2"), ds.getPartition("2"));
 		
 		// create some canned ground inference atoms
+		// The size 5 corresponds to NUM_GROUND_INF_ATOMS
+		// The number 6 of unique keys passed in ds.getUniqueID (1,2,3,4,5,6) 
+		//    corresponds to NUM_UNIQ_CONSTANTS
 		Constant[][] cannedTerms = new Constant[5][];
 		cannedTerms[0] = new Constant[]{ ds.getUniqueID(1), ds.getUniqueID(2) };
 		cannedTerms[1] = new Constant[]{ ds.getUniqueID(2), ds.getUniqueID(1) };

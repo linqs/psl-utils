@@ -47,7 +47,7 @@ public class DiscretePredictionStatistics implements PredictionStatistics {
 	private final Set<GroundAtom> correctAtoms;
 	
 	public DiscretePredictionStatistics(int tp, int fp, int tn, int fn,
-		double threshold, Map<GroundAtom, Double> errors, Set<GroundAtom> correctAtoms) {
+			double threshold, Map<GroundAtom, Double> errors, Set<GroundAtom> correctAtoms) {
 		this.tp = tp;
 		this.fp = fp;
 		this.tn = tn;
@@ -138,7 +138,7 @@ public class DiscretePredictionStatistics implements PredictionStatistics {
 		if (sum == 0.0) { 
 			return 0.0;
 		}
-		return 2*(prec*rec)/sum;
+		return 2 * (prec * rec) / sum;
 	}
 	
 	public double getAccuracy() {

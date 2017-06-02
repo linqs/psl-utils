@@ -136,7 +136,7 @@ public class DiscretePredictionComparatorTest {
 			DiscretePredictionStatistics comparison = comparator.compare(predicate, MAX_BASE_ATOMS);
 			double f1 = comparison.getF1(DiscretePredictionStatistics.BinaryClass.POSITIVE);
 			if (threshold <= 0.8) {
-				assertEquals(2.0/3.0, f1, 1e-5);
+				assertEquals(2.0 / 3.0, f1, 1e-5);
 			}
 			else {
 				assertEquals(0.0, f1, 1e-5);
@@ -154,7 +154,7 @@ public class DiscretePredictionComparatorTest {
 				assertEquals(0.9, acc, 1e-5);
 			}
 			else {
-				assertEquals(26.0/30.0, acc, 1e-5);
+				assertEquals(26.0 / 30.0, acc, 1e-5);
 			}
 		}
 	}
@@ -166,10 +166,10 @@ public class DiscretePredictionComparatorTest {
 			DiscretePredictionStatistics comparison = comparator.compare(predicate, MAX_BASE_ATOMS);
 			double prec = comparison.getPrecision(DiscretePredictionStatistics.BinaryClass.NEGATIVE);
 			if (threshold <= 0.8) {
-				assertEquals(24.0/25.0, prec, 1e-5);
+				assertEquals(24.0 / 25.0, prec, 1e-5);
 			}
 			else {
-				assertEquals(26.0/30.0, prec, 1e-5);
+				assertEquals(26.0 / 30.0, prec, 1e-5);
 			}
 		}
 	}
@@ -181,12 +181,12 @@ public class DiscretePredictionComparatorTest {
 			DiscretePredictionStatistics comparison = comparator.compare(predicate, MAX_BASE_ATOMS);
 			double recall = comparison.getRecall(DiscretePredictionStatistics.BinaryClass.NEGATIVE);
 			if (threshold <= 0.8) {
-				assertEquals(24.0/26.0, recall, 1e-5);
+				assertEquals(24.0 / 26.0, recall, 1e-5);
 			}
 			else {
 				assertEquals(1.0, recall, 1e-5);
 			}
-		}		
+		}
 	}
 	
 	@Test
@@ -196,12 +196,12 @@ public class DiscretePredictionComparatorTest {
 			DiscretePredictionStatistics comparison = comparator.compare(predicate, MAX_BASE_ATOMS);
 			double f1 = comparison.getF1(DiscretePredictionStatistics.BinaryClass.NEGATIVE);
 			if (threshold <= 0.8) {
-				assertEquals(16.0/17.0, f1, 1e-5);
+				assertEquals(16.0 / 17.0, f1, 1e-5);
 			}
 			else {
-				assertEquals(13.0/14.0, f1, 1e-5);
+				assertEquals(13.0 / 14.0, f1, 1e-5);
 			}
-		}		
+		}
 	}
 	
 }

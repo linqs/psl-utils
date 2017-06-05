@@ -87,10 +87,12 @@ public class DiscretePredictionStatistics implements PredictionStatistics {
 
 			@Override
 			public boolean apply(Entry<GroundAtom, Double> e) {
-				if (e.getValue() < 0.0)
+				if (e.getValue() < 0.0) {
 					return true;
-				else
+				}
+				else {
 					return false;
+				}
 			}
 		});
 	}
@@ -98,47 +100,53 @@ public class DiscretePredictionStatistics implements PredictionStatistics {
 	public double getPrecision(BinaryClass c) {
 		if (c == BinaryClass.NEGATIVE) {
 			double n = tn + fn;
-			if (n == 0.0)
+			if (n == 0.0) {
 				return 1.0;
-			return tn/n;
+			}
+			return tn / n;
 		}
 		else {
 			double p = tp + fp;
-			if (p == 0.0)
+			if (p == 0.0) {
 				return 1.0;
-			return tp/p;
+			}
+			return tp / p;
 		}
 	}
 	
 	public double getRecall(BinaryClass c) {
 		if (c == BinaryClass.NEGATIVE) {
 			double n = tn + fp;
-			if (n == 0.0)
+			if (n == 0.0) {
 				return 1.0;
-			return tn/(tn+fp);
+			}
+			return tn / n;
 		}
 		else {
 			double p = tp + fn;
-			if (p == 0.0)
+			if (p == 0.0) {
 				return 1.0;
-			return tp/(p);
+			}
+			return tp / p;
 		}
 	}
 	
 	public double getF1(BinaryClass c) {
-		double prec = this.getPrecision(c);
-		double rec = this.getRecall(c);
+		double prec = getPrecision(c);
+		double rec = getRecall(c);
 		double sum = prec + rec;
-		if (sum == 0.0)
+		if (sum == 0.0) { 
 			return 0.0;
-		return 2*(prec*rec)/sum;
+		}
+		return 2 * (prec * rec) / sum;
 	}
 	
 	public double getAccuracy() {
-		int numAtoms = getNumAtoms();
-		if (numAtoms == 0)
-			return 0;
-		return (tp + tn) / (double)getNumAtoms();
+		double numAtoms = getNumAtoms();
+		if (numAtoms == 0.0) {
+			return 0.0;
+		}
+		return (tp + tn) / numAtoms;
 	}
 
 	@Override

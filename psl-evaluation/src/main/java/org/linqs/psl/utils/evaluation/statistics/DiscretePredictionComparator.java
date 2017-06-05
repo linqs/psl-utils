@@ -78,7 +78,6 @@ public class DiscretePredictionComparator implements PredictionComparator {
 	@Override
 	public DiscretePredictionStatistics compare(Predicate p) {
 		countResultDBStats(p);
-		//System.out.println("tp " + tp + " fp " + fp + " tn " + tn + " fn " + fn);
 		return new DiscretePredictionStatistics(tp, fp, tn, fn, threshold, errors, correctAtoms);
 	}
 	
@@ -136,32 +135,36 @@ public class DiscretePredictionComparator implements PredictionComparator {
 		while (iter.hasNext()) {
 			resultAtom = iter.next();
 			args = new Constant[resultAtom.getArity()];
-			for (int i = 0; i < args.length; i++)
+			for (int i = 0; i < args.length; i++) {
 				args[i] = (Constant) resultAtom.getArguments()[i];
+			}
 			baselineAtom = baseline.getAtom(resultAtom.getPredicate(), args);
 			
-			if (baselineAtom instanceof ObservedAtom) {
-				actual = (resultAtom.getValue() >= threshold);
-				expected = (baselineAtom.getValue() >= threshold);
-				if (actual && expected || !actual && !expected) {
-					// True negative
-					if (!actual)
-						tn++;
-					// True positive
-					else
-						tp++;
-					correctAtoms.add(resultAtom);
+			if (!(baselineAtom instanceof ObservedAtom)) {
+				continue;
+			}
+			actual = (resultAtom.getValue() >= threshold);
+			expected = (baselineAtom.getValue() >= threshold);
+			if ((actual && expected) || (!actual && !expected)) {
+				// True negative
+				if (!actual) {
+					tn++;
 				}
-				// False negative
-				else if (!actual) {
-					fn++;
-					errors.put(resultAtom, -1.0);
-				}
-				// False positive
+				// True positive
 				else {
-					fp++;
-					errors.put(resultAtom, 1.0);
+					tp++;
 				}
+				correctAtoms.add(resultAtom);
+			}
+			// False negative
+			else if (!actual) {
+				fn++;
+				errors.put(resultAtom, -1.0);
+			}
+			// False positive
+			else {
+				fp++;
+				errors.put(resultAtom, 1.0);
 			}
 		}
 	}

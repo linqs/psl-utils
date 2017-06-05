@@ -40,6 +40,9 @@ public class DiscretePredictionComparatorTest {
 
 	private StandardPredicate predicate;
 	private DiscretePredictionComparator comparator;
+	private static final int NUM_GROUND_INF_ATOMS = 5;
+	private static final int NUM_UNIQ_CONSTANTS = 6;
+	private static final int MAX_BASE_ATOMS = NUM_GROUND_INF_ATOMS * NUM_UNIQ_CONSTANTS;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -57,6 +60,9 @@ public class DiscretePredictionComparatorTest {
 		Database baseline = ds.getDatabase(ds.getPartition("2"), ds.getPartition("2"));
 		
 		// create some canned ground inference atoms
+		// The size 5 corresponds to NUM_GROUND_INF_ATOMS
+		// The number 6 of unique keys passed in ds.getUniqueID (1,2,3,4,5,6) 
+		//    corresponds to NUM_UNIQ_CONSTANTS
 		Constant[][] cannedTerms = new Constant[5][];
 		cannedTerms[0] = new Constant[]{ ds.getUniqueID(1), ds.getUniqueID(2) };
 		cannedTerms[1] = new Constant[]{ ds.getUniqueID(2), ds.getUniqueID(1) };
@@ -95,53 +101,107 @@ public class DiscretePredictionComparatorTest {
 
 	@Test
 	public void testPrecision() {
-		for (double thresh = 0.1; thresh <= 1.0; thresh += 0.1) {
-			comparator.setThreshold(thresh);
-			DiscretePredictionStatistics comparison = comparator.compare(predicate, 6*5);
+		for (double threshold = 0.1; threshold <= 1.0; threshold += 0.1) {
+			comparator.setThreshold(threshold);
+			DiscretePredictionStatistics comparison = comparator.compare(predicate, MAX_BASE_ATOMS);
 			double prec = comparison.getPrecision(DiscretePredictionStatistics.BinaryClass.POSITIVE);
-			if (thresh <= 0.8)
-				assertEquals(0.6, prec, 1e-10);
-			else
-				assertEquals(1.0, prec, 1e-10);
+			if (threshold <= 0.8) {
+				assertEquals(0.6, prec, 1e-5);
+			}
+			else {
+				assertEquals(1.0, prec, 1e-5);
+			}
 		}
 	}
 	
 	@Test
 	public void testRecall() {
-		for (double thresh = 0.1; thresh <= 1.0; thresh += 0.1) {
-			comparator.setThreshold(thresh);
-			DiscretePredictionStatistics comparison = comparator.compare(predicate, 6*5);
+		for (double threshold = 0.1; threshold <= 1.0; threshold += 0.1) {
+			comparator.setThreshold(threshold);
+			DiscretePredictionStatistics comparison = comparator.compare(predicate, MAX_BASE_ATOMS);
 			double recall = comparison.getRecall(DiscretePredictionStatistics.BinaryClass.POSITIVE);
-			if (thresh <= 0.8)
-				assertEquals(0.75, recall, 1e-10);
-			else
-				assertEquals(0.0, recall, 1e-10);
-		}		
+			if (threshold <= 0.8) {
+				assertEquals(0.75, recall, 1e-5);
+			}
+			else {
+				assertEquals(0.0, recall, 1e-5);
+			}
+		}
 	}
 	
 	@Test
 	public void testF1() {
-		for (double thresh = 0.1; thresh <= 1.0; thresh += 0.1) {
-			comparator.setThreshold(thresh);
-			DiscretePredictionStatistics comparison = comparator.compare(predicate, 6*5);
+		for (double threshold = 0.1; threshold <= 1.0; threshold += 0.1) {
+			comparator.setThreshold(threshold);
+			DiscretePredictionStatistics comparison = comparator.compare(predicate, MAX_BASE_ATOMS);
 			double f1 = comparison.getF1(DiscretePredictionStatistics.BinaryClass.POSITIVE);
-			if (thresh <= 0.8)
-				assertEquals(2.0/3.0, f1, 1e-10);
-			else
-				assertEquals(0.0, f1, 1e-10);
-		}		
+			if (threshold <= 0.8) {
+				assertEquals(2.0 / 3.0, f1, 1e-5);
+			}
+			else {
+				assertEquals(0.0, f1, 1e-5);
+			}
+		}
 	}
 	
 	@Test
 	public void testAccuracy() {
-		for (double thresh = 0.1; thresh <= 1.0; thresh += 0.1) {
-			comparator.setThreshold(thresh);
-			DiscretePredictionStatistics comparison = comparator.compare(predicate, 6*5);
+		for (double threshold = 0.1; threshold <= 1.0; threshold += 0.1) {
+			comparator.setThreshold(threshold);
+			DiscretePredictionStatistics comparison = comparator.compare(predicate, MAX_BASE_ATOMS);
 			double acc = comparison.getAccuracy();
-			if (thresh <= 0.8)
-				assertEquals(0.9, acc, 1e-10);
-			else
-				assertEquals(26.0/30.0, acc, 1e-10);
-		}		
+			if (threshold <= 0.8) {
+				assertEquals(0.9, acc, 1e-5);
+			}
+			else {
+				assertEquals(26.0 / 30.0, acc, 1e-5);
+			}
+		}
 	}
+
+	@Test
+	public void testPrecisionNegativeClass() {
+		for (double threshold = 0.1; threshold <= 1.0; threshold += 0.1) {
+			comparator.setThreshold(threshold);
+			DiscretePredictionStatistics comparison = comparator.compare(predicate, MAX_BASE_ATOMS);
+			double prec = comparison.getPrecision(DiscretePredictionStatistics.BinaryClass.NEGATIVE);
+			if (threshold <= 0.8) {
+				assertEquals(24.0 / 25.0, prec, 1e-5);
+			}
+			else {
+				assertEquals(26.0 / 30.0, prec, 1e-5);
+			}
+		}
+	}
+	
+	@Test
+	public void testRecallNegativeClass() {
+		for (double threshold = 0.1; threshold <= 1.0; threshold += 0.1) {
+			comparator.setThreshold(threshold);
+			DiscretePredictionStatistics comparison = comparator.compare(predicate, MAX_BASE_ATOMS);
+			double recall = comparison.getRecall(DiscretePredictionStatistics.BinaryClass.NEGATIVE);
+			if (threshold <= 0.8) {
+				assertEquals(24.0 / 26.0, recall, 1e-5);
+			}
+			else {
+				assertEquals(1.0, recall, 1e-5);
+			}
+		}
+	}
+	
+	@Test
+	public void testF1NegativeClass() {
+		for (double threshold = 0.1; threshold <= 1.0; threshold += 0.1) {
+			comparator.setThreshold(threshold);
+			DiscretePredictionStatistics comparison = comparator.compare(predicate, MAX_BASE_ATOMS);
+			double f1 = comparison.getF1(DiscretePredictionStatistics.BinaryClass.NEGATIVE);
+			if (threshold <= 0.8) {
+				assertEquals(16.0 / 17.0, f1, 1e-5);
+			}
+			else {
+				assertEquals(13.0 / 14.0, f1, 1e-5);
+			}
+		}
+	}
+	
 }

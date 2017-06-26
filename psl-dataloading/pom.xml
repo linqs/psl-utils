@@ -22,7 +22,6 @@
 	<groupId>org.linqs</groupId>
 	<artifactId>psl-dataloading</artifactId>
 	<name>psl-dataloading</name>
-	<version>CANARY</version>
 	<packaging>jar</packaging>
 	<description>Text similarity extensions to the PSL software from the LINQS research group.</description>
 	<parent>
@@ -35,7 +34,7 @@
 		<dependency>
 			<groupId>org.linqs</groupId>
 			<artifactId>psl-core</artifactId>
-			<version>CANARY</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- linear algebra dependencies -->
@@ -94,4 +93,3 @@
 		</dependency>
 	</dependencies>
 </project>
-

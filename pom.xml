@@ -39,7 +39,7 @@
 	</organization>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<psl-core-version>2.0-SNAPSHOT</psl-core-version>
+		<psl-core-version>CANARY</psl-core-version>
 	</properties>
 
 	<modules>

@@ -15,8 +15,8 @@ The following modules are provided by psl-utils:
 Additional Resources
 ====================
 
-- [PSL homepage](http://psl.cs.umd.edu)
+- [PSL homepage](http://psl.linqs.org)
 - [PSL source repository](https://github.com/linqs/psl)
-- [PSL wiki](https://github.com/eriq-augustine/psl/wiki)
-- [Getting Started guide](https://github.com/eriq-augustine/psl/wiki/Core-Topics)
+- [PSL wiki](https://github.com/linqs/psl/wiki)
+- [Getting Started guide](https://github.com/linqs/psl/wiki/Core-Topics)
 - [User group](https://groups.google.com/forum/#!forum/psl-users)

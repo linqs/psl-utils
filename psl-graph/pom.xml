@@ -22,13 +22,13 @@
 	<groupId>org.linqs</groupId>
 	<artifactId>psl-graph</artifactId>
 	<name>psl-graph</name>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<description>Graph representation and utilities.</description>
 	<parent>
 		<groupId>org.linqs</groupId>
 		<artifactId>psl-utils</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<dependencies>

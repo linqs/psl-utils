@@ -22,6 +22,7 @@
 	<groupId>org.linqs</groupId>
 	<artifactId>psl-graph</artifactId>
 	<name>psl-graph</name>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<description>Graph representation and utilities.</description>
 	<parent>

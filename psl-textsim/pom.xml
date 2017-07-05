@@ -22,6 +22,7 @@
 	<groupId>org.linqs</groupId>
 	<artifactId>psl-textsim</artifactId>
 	<name>psl-textsim</name>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<description>Text similarity extensions to the PSL software from the LINQS research group.</description>
 	<parent>

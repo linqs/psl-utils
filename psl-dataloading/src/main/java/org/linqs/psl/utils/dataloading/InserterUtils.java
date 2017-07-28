@@ -17,340 +17,99 @@
  */
 package org.linqs.psl.utils.dataloading;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.linqs.psl.database.DataStore;
 import org.linqs.psl.database.Partition;
 import org.linqs.psl.database.loading.Inserter;
 import org.linqs.psl.model.predicate.Predicate;
 import org.linqs.psl.model.predicate.PredicateFactory;
 import org.linqs.psl.model.predicate.StandardPredicate;
-import org.linqs.psl.utils.dataloading.file.DelimitedObjectConstructor;
-import org.linqs.psl.utils.dataloading.file.LoadDelimitedData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cern.colt.Arrays;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Utility methods for common data-loading tasks.
+ * All data will be sent to the inserter as a string.
+ * It is the responsibility of the inserter to handle conversions from strings.
  */
 public class InserterUtils {
-	
+	public static final String DEFAULT_DELIMITER = "\t";
+	public static final String COMMENT_PREFIX = "//";
+
 	private static final Logger log = LoggerFactory.getLogger(InserterUtils.class);
-	
 
-	public static void loadDelimitedDataAutomatic(final Predicate p, final Inserter insert, String file, String delimiter) {
-		LoadDelimitedData.loadTabData(file, new DelimitedObjectConstructor<String>(){
-
-			@Override
-			public String create(String[] data) {
-				//assert data.length==length;
-				if(p.getArity()<data.length){
-					double truth;
-					try {
-						truth = Double.parseDouble(data[data.length-1]);
-					} catch (NumberFormatException e) {
-						throw new AssertionError("Could not read truth value for data: " + Arrays.toString(data));
-					}
-					if (truth<0.0 || truth>1.0)
-						throw new AssertionError("Illegal truth value encountered: " + truth);
-					Object[] newdata = new Object[data.length-1];
-					System.arraycopy(data, 0, newdata, 0, newdata.length);
-					insert.insertValue(truth,newdata);
-					return null;
-				} else {
-					insert.insert((Object[])data);
-					return null;
-				}
-			}
-
-			@Override
-			public int length() {
-				return 0;
-			}
-			
-		}, delimiter);
+	public static void loadDelimitedData(Inserter inserter, String path) {
+		loadDelimitedData(inserter, path, DEFAULT_DELIMITER);
 	}
-	
-	public static void loadDelimitedDataAutomatic(final Predicate p, final Inserter insert, String file) {
-		loadDelimitedDataAutomatic(p,insert,file,LoadDelimitedData.defaultDelimiter);
-	}
-	
-	public static void loadDelimitedData(final Inserter insert, String file, String delimiter) {
-		LoadDelimitedData.loadTabData(file, new DelimitedObjectConstructor<String>(){
 
-			@Override
-			public String create(String[] data) {
-				//assert data.length==length;
-				insert.insert((Object[])data);
-				return null;
-			}
-
-			@Override
-			public int length() {
-				return 0;
-			}
-			
-		}, delimiter);
+	public static void loadDelimitedData(Inserter inserter, String path, String delimiter) {
+		List<List<Object>> data = loadDelimitedData(path, delimiter);
+		inserter.insertAll(data);
 	}
-	
-	public static void loadDelimitedData(final Inserter insert, String file) {
-		loadDelimitedData(insert,file,LoadDelimitedData.defaultDelimiter);
-	}
-	
-	public static void loadDelimitedDataTruth(final Inserter insert, String file, String delimiter) {
-		LoadDelimitedData.loadTabData(file, new DelimitedObjectConstructor<String>(){
 
-			@Override
-			public String create(String[] data) {
-				double truth;
-				try {
-					truth = Double.parseDouble(data[data.length-1]);
-				} catch (NumberFormatException e) {
-					throw new AssertionError("Could not read truth value for data: " + Arrays.toString(data));
-				}
-				if (truth<0.0 || truth>1.0)
-					throw new AssertionError("Illegal truth value encountered: " + truth);
-				Object[] newdata = new Object[data.length-1];
-				System.arraycopy(data, 0, newdata, 0, newdata.length);
-				insert.insertValue(truth,newdata);
-				return null;
+	public static void loadDelimitedDataTruth(Inserter inserter, String path) {
+		loadDelimitedDataTruth(inserter, path, DEFAULT_DELIMITER);
+	}
+
+	public static void loadDelimitedDataTruth(final Inserter inserter, String path, String delimiter) {
+		List<List<Object>> data = loadDelimitedData(path, delimiter);
+		List<Double> values = new ArrayList<Double>(data.size());
+
+		for (int i = 0; i < data.size(); i++) {
+			List<Object> row = data.get(i);
+
+			double truth;
+			try {
+				truth = Double.parseDouble((String)row.get(row.size() - 1));
+			} catch (NumberFormatException ex) {
+				throw new IllegalArgumentException("Could not read truth value for row " + (i + 1) + ": " + row.get(row.size() - 1), ex);
 			}
 
-			@Override
-			public int length() {
-				return 0;
-			}
-			
-		}, delimiter);
-	}
-	
-	public static void loadDelimitedDataTruth(final Inserter insert, String file) {
-		loadDelimitedDataTruth(insert,file,LoadDelimitedData.defaultDelimiter);
-	}
-	
-	public static void loadDelimitedMultiData(final InserterLookup inserters, final int position, 
-												String file, String delimiter) {
-		LoadDelimitedData.loadTabData(file, new DelimitedObjectConstructor<String>(){
-
-			@Override
-			public String create(String[] data) {
-				if (data.length<2 || data.length<=position) {
-					log.error("The following data is illegal and therefore skipped: {}",data);
-					return null;
-				}
-				Inserter insert = inserters.get(data[position]);
-				if (insert==null) {
-					log.error("Could not find inserter for [{}] and therefore skipped: {}",data[position],data);
-					return null;
-				}
-				Object[] ins = new Object[data.length-1];
-				int j=0;
-				for (int i=0;i<data.length;i++) {
-					if (i==position) continue;
-					ins[j]=data[i];
-					j++;
-				}
-				insert.insert(ins);
-				return null;
+			if (truth < 0.0 || truth > 1.0) {
+				throw new IllegalArgumentException("Illegal truth value encountered on row " + (i + 1) + ": " + truth);
 			}
 
-			@Override
-			public int length() {
-				return 0;
-			}
-			
-		}, delimiter);
-	}
-	
-	public static void loadDelimitedMultiData(final InserterLookup inserters, final int position, 
-			String file) {
-		loadDelimitedMultiData(inserters,position,file,LoadDelimitedData.defaultDelimiter);
-	}
-	
-	/**
-	 * Calls {{@link #loadFactTable(PredicateFactory, DataStore, String, Partition, String)} with
-	 * default delimiter.
-	 * 
-	 * @param data      DataStore from which to create inserters
-	 * @param file	    path to table file
-	 * @param partition partition into which data will be inserted
-	 */
-	public static void loadFactTable(final DataStore data, String file, Partition partition) {
-		loadFactTable(data, file, partition, LoadDelimitedData.defaultDelimiter);
-	}
-	
-	/**
-	 * Loads a table of facts. Each column in the table should be a column of entities.
-	 * The first row should be predicate names. Cell (1,1) should be empty.
-	 * 
-	 * @param data      DataStore from which to create inserters
-	 * @param file	    path to table file
-	 * @param partition partition into which data will be inserted
-	 * @param delimiter delimiter between columns in a row
-	 */
-	public static void loadFactTable(final DataStore data, String file, Partition partition,
-			String delimiter) {
-		Predicate p;
-		PredicateFactory pf = PredicateFactory.getFactory();
-		List<String[]> table = LoadDelimitedData.loadTabData(file, new DelimitedObjectConstructor<String[]>(){
-			
-			@Override
-			public String[] create(String[] data) {
-				return data;
-			}
-
-			@Override
-			public int length() {
-				return 0;
-			}
-			
-		}, delimiter);
-		
-		String[] row = table.get(0);
-		Inserter[] inserters = new Inserter[row.length-1];
-		for (int i = 1; i < row.length; i++) {
-			p = pf.getPredicate(row[i]);
-			if (p != null) {
-				if (p instanceof StandardPredicate) {
-					inserters[i-1] = data.getInserter((StandardPredicate) p, partition);
-				}
-				else
-					throw new IllegalStateException("Predicate '" + row[i] + "' is not a StandardPredicate.");
-			}
-			else
-				throw new IllegalStateException("No predicate with name '" + row[i] + "' has been created.");
+			// Remove the truth value from the list by taking a sublist (should not cause any additional allocation).
+			data.set(i, row.subList(0, row.size() - 1));
+         values.add(truth);
 		}
-		
-		Iterator<String[]> itr = table.iterator();
-		String[] newData = new String[2];
-		itr.next();
-		while (itr.hasNext()) {
-			row = itr.next();
-			newData[0] = row[0];
-			for (int i = 1; i < row.length; i++) {
-				newData[1] = row[i];
-				inserters[i-1].insert((Object[]) newData);
+
+		inserter.insertAllValues(values, data);
+	}
+
+	/**
+	 * Parse a file and get the parts of each row.
+	 * Each object returned will be a string, but we are returning Objects so the inserter can take it in directly.
+	 */
+	private static List<List<Object>> loadDelimitedData(String path, String delimiter) {
+		List<List<Object>> rows = new ArrayList<List<Object>>();
+
+		try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+			String line = null;
+			int lineNumber = 0;
+
+			while ((line = reader.readLine()) != null) {
+				lineNumber++;
+
+				line = line.trim();
+				if (line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
+					continue;
+				}
+
+				Object[] data = (Object[])line.split(delimiter);
+				rows.add(Arrays.asList(data));
 			}
+		} catch (IOException ex) {
+			throw new RuntimeException("Unable to parse delimited file.", ex);
 		}
-	}
-	
-	/**
-	 * Calls {{@link #loadFactIntersectionTable(Inserter, String, String)} with
-	 * default delimiter.
-	 * 
-	 * @param insert	inserter for the predicate
-	 * @param file		path to table file
-	 */
-	public static void loadFactIntersectionTable(final Inserter insert, String file) {
-		loadFactIntersectionTable(insert, file, LoadDelimitedData.defaultDelimiter);
-	}
-	
-	/**
-	 * Loads facts from a table represented as delimited values in a file.
-	 * Given an inserter for predicate P, inserts P(row, column) for each cell
-	 * in the table, where row and column are headers of that cell's row and column,
-	 * respectively. The predicate is added as a fact with the value in that cell.
-	 * 
-	 * @param insert		inserter for the predicate
-	 * @param file			path to table file
-	 * @param delimiter		delimiter separating columns in the file
-	 */
-	public static void loadFactIntersectionTable(final Inserter insert, String file, String delimiter) {
-		LoadDelimitedData.loadTabData(file, new DelimitedObjectConstructor<String>(){
-			
-			boolean first = true;
-			String[] headings;
 
-			@Override
-			public String create(String[] data) {
-				if (first) {
-					headings = data;
-					first = false;
-				}
-				else {
-					double fact;
-					String[] newData = new String[2];
-					newData[0] = data[0];
-					for (int i = 1; i < data.length; i++) {
-						if (!data[i].trim().equals("")) {
-							try {
-								fact = Double.parseDouble(data[i]);
-							}
-							catch (NumberFormatException e) {
-								throw new AssertionError("Could not read fact value for data: "
-									+ data[0] + ", " + headings[i] + " = " + data[i]);
-							}
-							newData[1] = headings[i];
-							insert.insertValue(fact,(Object[]) newData);
-						}
-					}
-				}
-				return null;
-			}
-
-			@Override
-			public int length() {
-				return 0;
-			}
-			
-		}, delimiter);
-	}
-	
-	/**
-	 * Calls {{@link #loadFactEntityIntersectionTable(Inserter, String, String)} with
-	 * default delimiter.
-	 * 
-	 * @param insert	inserter for the predicate
-	 * @param file		path to table file
-	 */
-	public static void loadFactEntityIntersectionTable(final Inserter insert, String file) {
-		loadFactEntityIntersectionTable(insert, file, LoadDelimitedData.defaultDelimiter);
-	}
-	
-	/**
-	 * Loads facts from a table represented as delimited values in a file.
-	 * Given an inserter for predicate P, inserts P(row, column, value) for each cell
-	 * in the table, where row and column are headers of that cell's row and column,
-	 * respectively, and value is the value in the cell.
-	 * 
-	 * @param insert		inserter for the predicate
-	 * @param file			path to table file
-	 * @param delimiter		delimiter separating columns in the file
-	 */
-	public static void loadFactEntityIntersectionTable(final Inserter insert, String file, String delimiter) {
-		LoadDelimitedData.loadTabData(file, new DelimitedObjectConstructor<String>(){
-			
-			boolean first = true;
-			String[] headings;
-
-			@Override
-			public String create(String[] data) {
-				if (first) {
-					headings = data;
-					first = false;
-				}
-				else {
-					String[] newData = new String[3];
-					newData[0] = data[0];
-					for (int i = 1; i < data.length; i++) {
-						if (!data[i].trim().equals("")) {
-							newData[1] = headings[i];
-							newData[2] = data[i];
-							insert.insert((Object[]) newData);
-						}
-					}
-				}
-				return null;
-			}
-
-			@Override
-			public int length() {
-				return 0;
-			}
-			
-		}, delimiter);
+		return rows;
 	}
 }

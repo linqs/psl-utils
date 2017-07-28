@@ -28,19 +28,19 @@ import org.linqs.psl.database.Database;
 import org.linqs.psl.database.Queries;
 import org.linqs.psl.utils.evaluation.statistics.filter.AtomFilter;
 import org.linqs.psl.model.atom.GroundAtom;
-import org.linqs.psl.model.predicate.Predicate;
+import org.linqs.psl.model.predicate.StandardPredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SimpleRankingComparator implements RankingComparator {
 
 	private static final Logger log = LoggerFactory.getLogger(SimpleRankingComparator.class);
-	
+
 	private final Database result;
 	private Database baseline;
 	private AtomFilter resultFilter = AtomFilter.NoFilter;
-	private RankingScore rankScore; 
-	
+	private RankingScore rankScore;
+
 	public SimpleRankingComparator(Database result) {
 		this.result=result;
 		baseline = null;
@@ -62,38 +62,38 @@ public class SimpleRankingComparator implements RankingComparator {
 	public void setResultFilter(AtomFilter af) {
 		resultFilter = af;
 	}
-	
+
 	@Override
-	public double compare(Predicate p) {
+	public double compare(StandardPredicate predicate) {
 		/* Result atoms */
 		List<GroundAtom> resultAtoms = new ArrayList<GroundAtom>();
-		Iterator<GroundAtom> itr = resultFilter.filter(Queries.getAllAtoms(result, p).iterator());
+		Iterator<GroundAtom> itr = resultFilter.filter(Queries.getAllAtoms(result, predicate).iterator());
 		while (itr.hasNext())
 			resultAtoms.add(itr.next());
 		Collections.sort(resultAtoms, new AtomComparator());
 
 		log.debug("Collected and sorted result atoms. Size: {}", resultAtoms.size());
-		
+
 		/* Baseline atoms */
 		List<GroundAtom> baselineAtoms = new ArrayList<GroundAtom>();
-		itr = resultFilter.filter(Queries.getAllAtoms(baseline, p).iterator());
+		itr = resultFilter.filter(Queries.getAllAtoms(baseline, predicate).iterator());
 		while (itr.hasNext())
 			baselineAtoms.add(itr.next());
 		Collections.sort(baselineAtoms, new AtomComparator());
-		
+
 		log.debug("Collected and sorted base atoms. Size: {}", baselineAtoms.size());
-		
-		
+
+
 		ListOrderedSet<GroundAtom> baselineHashList = new ListOrderedSet<GroundAtom>();
 		for (GroundAtom atom : baselineAtoms)
-			baselineHashList.add(atom);	
+			baselineHashList.add(atom);
 		ListOrderedSet<GroundAtom> resultHashList = new ListOrderedSet<GroundAtom>();
 		for (GroundAtom atom : resultAtoms)
-			resultHashList.add(atom);	
-		
+			resultHashList.add(atom);
+
 		return rankScore.getScore(baselineHashList.asList(), resultHashList.asList());
 	}
-	
+
 	private class AtomComparator implements Comparator<GroundAtom> {
 		@Override
 		public int compare(GroundAtom a1, GroundAtom a2) {
@@ -105,5 +105,4 @@ public class SimpleRankingComparator implements RankingComparator {
 				return -1;
 		}
 	}
-	
 }

@@ -30,20 +30,18 @@ import org.linqs.psl.model.atom.RandomVariableAtom;
  * via {@link #setResultFilter(AtomFilter)}. Initially there is no filter.
  */
 public interface ResultComparator {
-
 	/**
 	 * Sets the baseline with which to compare.
-	 * 
+	 *
 	 * @param db  the baseline Database
 	 */
 	public void setBaseline(Database db);
-	
+
 	/**
 	 * Sets a filter on the {@link RandomVariableAtom RandomVariableAtoms}
 	 * in the results Database that will be compared with the baseline.
-	 * 
+	 *
 	 * @param af  the filter
 	 */
 	public void setResultFilter(AtomFilter af);
-	
 }

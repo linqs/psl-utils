@@ -17,22 +17,21 @@
  */
 package org.linqs.psl.utils.evaluation.printing;
 
-import java.text.DecimalFormat;
-
 import org.linqs.psl.model.atom.Atom;
 import org.linqs.psl.model.atom.GroundAtom;
 import org.linqs.psl.model.atom.ObservedAtom;
 import org.linqs.psl.model.atom.RandomVariableAtom;
 
+import java.text.DecimalFormat;
+
 public class AtomPrinter {
-	
 	private static final DecimalFormat valueFormatter = new DecimalFormat("#.##");
 
 	public static final String atomDetails(Atom atom) {
-		return atomDetails(atom,true,true);
+		return atomDetails(atom, true);
 	}
-	
-	public static final String atomDetails(Atom atom, boolean printType, boolean printConfidence) {
+
+	public static final String atomDetails(Atom atom, boolean printType) {
 		StringBuilder s = new StringBuilder();
 		s.append(atom.toString());
 		if (atom instanceof GroundAtom) {
@@ -50,14 +49,8 @@ public class AtomPrinter {
 					throw new IllegalArgumentException("Cannot print type of GroundAtom: " + groundAtom);
 				s.append(" Type=").append(type);
 			}
-			if (printConfidence) {
-				s.append(" Conf.=[");
-				s.append(valueFormatter.format(groundAtom.getConfidenceValue()));
-				s.append("]");
-			}
 		}
+
 		return s.toString();
 	}
-	
-	
 }

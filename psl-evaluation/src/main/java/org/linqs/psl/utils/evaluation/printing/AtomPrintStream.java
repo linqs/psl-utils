@@ -17,12 +17,10 @@
  */
 package org.linqs.psl.utils.evaluation.printing;
 
-import org.linqs.psl.model.atom.*;
+import org.linqs.psl.model.atom.Atom;
 
 public interface AtomPrintStream {
-
 	public void printAtom(Atom atom);
-	
+
 	public void close();
-	
 }

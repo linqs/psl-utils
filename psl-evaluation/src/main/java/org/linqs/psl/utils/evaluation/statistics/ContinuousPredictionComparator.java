@@ -23,7 +23,7 @@ import org.linqs.psl.database.Database;
 import org.linqs.psl.database.Queries;
 import org.linqs.psl.utils.evaluation.statistics.filter.AtomFilter;
 import org.linqs.psl.model.atom.GroundAtom;
-import org.linqs.psl.model.predicate.Predicate;
+import org.linqs.psl.model.predicate.StandardPredicate;
 
 public class ContinuousPredictionComparator implements ResultComparator {
 
@@ -55,19 +55,19 @@ public class ContinuousPredictionComparator implements ResultComparator {
 	}
 
 	/**
-	 * For now, assumes the results DB has grounded all relevant instances of predicate p. 
+	 * For now, assumes the results DB has grounded all relevant instances of the predicate.
 	 * I.e., currently this does not check for missed instances in the baseline DB
-	 * @param p
+	 * @param predicate
 	 * @return
 	 */
-	public double compare(Predicate p) {
+	public double compare(StandardPredicate predicate) {
 		double score = 0.0;
 		int total = 0;
 		/* Result atoms */
-		Iterator<GroundAtom> itr = resultFilter.filter(Queries.getAllAtoms(result, p).iterator());
+		Iterator<GroundAtom> itr = resultFilter.filter(Queries.getAllAtoms(result, predicate).iterator());
 		while (itr.hasNext()) {
 			GroundAtom pred = itr.next();
-			GroundAtom label = baseline.getAtom(p, pred.getArguments());
+			GroundAtom label = baseline.getAtom(predicate, pred.getArguments());
 			score += accumulate(label.getValue() - pred.getValue());
 			total++;
 		}

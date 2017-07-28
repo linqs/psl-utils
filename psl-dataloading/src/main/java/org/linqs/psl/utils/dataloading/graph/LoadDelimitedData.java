@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.linqs.psl.utils.dataloading.file;
+package org.linqs.psl.utils.dataloading.graph;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -27,10 +27,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LoadDelimitedData {
-	
-	private static final Logger log = LoggerFactory.getLogger(LoadDelimitedData.class);
 	public static final String defaultDelimiter = "\t";
+
+	private static final Logger log = LoggerFactory.getLogger(LoadDelimitedData.class);
 	private static final String commentPrefix = "//";
+
+	public static<O> List<O> loadTabData(String fileName, DelimitedObjectConstructor<O> loader) {
+		return loadTabData(fileName,loader,defaultDelimiter);
+	}
 
 	public static<O> List<O> loadTabData(String fileName, DelimitedObjectConstructor<O> loader, String delim) {
 		List<O> result = new ArrayList<O>();
@@ -43,7 +47,7 @@ public class LoadDelimitedData {
 				line = line.trim();
 				if (line.isEmpty()) continue;
 				if (line.startsWith(commentPrefix)) continue;
-				
+
 				String[] data = line.split(delim);
 				if (loader.length()>0 && data.length != loader.length()) {
 					log.warn("Could not parse line #{} (contents='{}') from file: "+fileName,lineNr,line);
@@ -56,31 +60,7 @@ public class LoadDelimitedData {
 			in.close();
 		} catch (IOException e) {
 			throw new AssertionError(e);
-		} 
+		}
 		return result;
 	}
-	
-	public static<O> List<O> loadTabData(String fileName, DelimitedObjectConstructor<O> loader) {
-		return loadTabData(fileName,loader,defaultDelimiter);
-	}
-	
-	public static List<Integer> loadIntegerData(String fileName, final int length, final int position) {
-		return loadIntegerData(fileName,defaultDelimiter,length,position);
-	}
-	
-	public static List<Integer> loadIntegerData(String fileName, String delim, final int length, final int position) {
-		return loadTabData(fileName, new DelimitedObjectConstructor<Integer>(){
-
-			@Override
-			public Integer create(String[] data) {
-				return Integer.parseInt(data[position]);
-			}
-
-			@Override
-			public int length() {
-				return length;
-			}
-			},delim);
-	}
-	
 }

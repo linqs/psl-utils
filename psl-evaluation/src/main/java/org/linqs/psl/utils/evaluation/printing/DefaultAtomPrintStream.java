@@ -17,25 +17,24 @@
  */
 package org.linqs.psl.utils.evaluation.printing;
 
-import java.io.PrintStream;
-
 import org.linqs.psl.model.atom.Atom;
 
-public class DefaultAtomPrintStream implements AtomPrintStream {
+import java.io.PrintStream;
 
+public class DefaultAtomPrintStream implements AtomPrintStream {
 	private int atomcount;
-        private PrintStream ps;
-	
+	private PrintStream ps;
+
 	public DefaultAtomPrintStream() {
-	    this(System.out);
+		this(System.out);
 	}
-    
+
 	public DefaultAtomPrintStream(PrintStream ps) {
-		atomcount=0;
+		atomcount = 0;
 		this.ps = ps;
 		ps.println("--- Atoms: ");
 	}
-	
+
 	@Override
 	public void close() {
 		ps.println("# Atoms: " + atomcount);
@@ -43,8 +42,7 @@ public class DefaultAtomPrintStream implements AtomPrintStream {
 
 	@Override
 	public void printAtom(Atom atom) {
-		ps.println(AtomPrinter.atomDetails(atom,false,false));
+		ps.println(AtomPrinter.atomDetails(atom, false));
 		atomcount++;
 	}
-
 }

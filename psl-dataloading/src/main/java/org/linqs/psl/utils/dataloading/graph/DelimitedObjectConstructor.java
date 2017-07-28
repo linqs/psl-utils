@@ -15,12 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.linqs.psl.utils.dataloading;
+package org.linqs.psl.utils.dataloading.graph;
 
-import org.linqs.psl.database.loading.Inserter;
+public interface DelimitedObjectConstructor<O extends Object> {
+	public static Filter NoFilter = new Filter() {
+		@Override
+		public boolean include(String[] data) {
+			return true;
+		}
+	};
 
-public interface InserterLookup {
+	public static interface Filter {
+		public boolean include(String[] data);
+	}
 
-	public Inserter get(String predicateName);
-	
+	public O create(String[] data);
+
+	public int length();
 }

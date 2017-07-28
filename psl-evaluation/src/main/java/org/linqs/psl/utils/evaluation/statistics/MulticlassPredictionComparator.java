@@ -27,15 +27,15 @@ import org.linqs.psl.database.Queries;
 import org.linqs.psl.utils.evaluation.statistics.filter.AtomFilter;
 import org.linqs.psl.utils.evaluation.statistics.filter.MaxValueFilter;
 import org.linqs.psl.model.atom.GroundAtom;
-import org.linqs.psl.model.predicate.Predicate;
+import org.linqs.psl.model.predicate.StandardPredicate;
 import org.linqs.psl.model.term.Constant;
 
 /**
  * Computes statistics for multiclass prediction.
- * 
+ *
  * NOTE: Currently only works with binary predicates of the form (example, label) or (label, example),
  * where example is a single {@link Constant} and label is a single {@link IntegerAttribute}.
- * 
+ *
  * @author Ben
  *
  */
@@ -46,17 +46,17 @@ public class MulticlassPredictionComparator implements ResultComparator {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param predDB Predictions database. Target predicates must be closed.
 	 */
 	public MulticlassPredictionComparator(Database predDB) {
 		this.predDB = predDB;
 		this.truthDB = null;
 	}
-	
+
 	/**
 	 * Sets the ground truth database.
-	 * 
+	 *
 	 * @param truthDB Ground truth database. Target predicates must be closed.
 	 */
 	@Override
@@ -71,26 +71,26 @@ public class MulticlassPredictionComparator implements ResultComparator {
 	public void setResultFilter(AtomFilter af) {
 		// TODO Auto-generated method stub
 	}
-	
+
 	/**
 	 * Returns prediction statistics in the form of a confusion matrix.
-	 * 
-	 * @param p A predicate
+	 *
+	 * @param predicate A predicate
 	 * @param labelMap A map indicating the mapping from the label to an index.
 	 * @param labelIndex The index of the label in each example's terms.
 	 * @return A {@link MulticlassPredictionStatistics}.
 	 */
-	public PredictionStatistics compare(Predicate p, Map<Constant,Integer> labelMap, int labelIndex) {
+	public PredictionStatistics compare(StandardPredicate predicate, Map<Constant,Integer> labelMap, int labelIndex) {
 		/* Allocate a square confusion matrix. */
 		int numClass = labelMap.size();
 		int[][] cm = new int[numClass][numClass];
-		
+
 		/* Get all predicted atoms using max-score label. */
-		Map<Example,Integer> pred = getAllMaxScoreAtoms(predDB, p, labelMap, labelIndex);
-		
+		Map<Example,Integer> pred = getAllMaxScoreAtoms(predDB, predicate, labelMap, labelIndex);
+
 		/* Get all of the ground truth atoms. */
-		Map<Example,Integer> truth = getAllMaxScoreAtoms(truthDB, p, labelMap, labelIndex);
-		
+		Map<Example,Integer> truth = getAllMaxScoreAtoms(truthDB, predicate, labelMap, labelIndex);
+
 		/* Iterate over all prediction and compare to ground truth. */
 		for (Entry<Example,Integer> entry : pred.entrySet()) {
 			Example ex = entry.getKey();
@@ -100,23 +100,23 @@ public class MulticlassPredictionComparator implements ResultComparator {
 			int trueLabel = truth.get(ex);
 			++cm[trueLabel][predLabel];
 		}
-		
+
 		return new MulticlassPredictionStatistics(new ConfusionMatrix(cm));
 	}
-	
+
 	/**
 	 * Returns all of the examples for a given predicate, along with their max-scoring labels.
-	 * 
+	 *
 	 * @param db
-	 * @param p
+	 * @param predicate
 	 * @param labelMap
 	 * @param labelIndex
 	 * @return
 	 */
-	private Map<Example,Integer> getAllMaxScoreAtoms(Database db, Predicate p, Map<Constant,Integer> labelMap, int labelIndex) {
+	private Map<Example,Integer> getAllMaxScoreAtoms(Database db, StandardPredicate predicate, Map<Constant,Integer> labelMap, int labelIndex) {
 		Map<Example,Integer> atoms = new HashMap<Example,Integer>();
-		AtomFilter maxFilter = new MaxValueFilter(p, labelIndex);
-		Iterator<GroundAtom> iter = maxFilter.filter(Queries.getAllAtoms(db, p).iterator());
+		AtomFilter maxFilter = new MaxValueFilter(predicate, labelIndex);
+		Iterator<GroundAtom> iter = maxFilter.filter(Queries.getAllAtoms(db, predicate).iterator());
 		while (iter.hasNext()) {
 			GroundAtom predAtom = iter.next();
 			if (predAtom.getValue() == 0.0)
@@ -133,23 +133,23 @@ public class MulticlassPredictionComparator implements ResultComparator {
 		}
 		return atoms;
 	}
-	
+
 	/**
 	 * Wrapper for groupings of ground terms dubbed "examples".
-	 * 
+	 *
 	 * TODO: Current version assumes that the example is composed of a single term.
 	 * Needs to be changed to generalize this code.
-	 * 
+	 *
 	 * @author Ben
 	 */
 	class Example {
-		
+
 		private final Constant[] terms;
-		
+
 		public Example(Constant[] terms) {
 			this.terms = terms;
 		}
-		
+
 		@Override
 		public boolean equals(Object obj) {
 			if (!(obj instanceof Example))
@@ -168,7 +168,7 @@ public class MulticlassPredictionComparator implements ResultComparator {
 		public int hashCode() {
 			return terms[0].hashCode();
 		}
-		
+
 		@Override
 		public String toString() {
 			return terms[0].toString();

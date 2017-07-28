@@ -19,7 +19,7 @@ package org.linqs.psl.utils.evaluation.statistics;
 
 import org.linqs.psl.model.atom.ObservedAtom;
 import org.linqs.psl.model.atom.RandomVariableAtom;
-import org.linqs.psl.model.predicate.Predicate;
+import org.linqs.psl.model.predicate.StandardPredicate;
 
 /**
  * Computes statistics by comparing the truth value of each {@link RandomVariableAtom}
@@ -28,9 +28,8 @@ import org.linqs.psl.model.predicate.Predicate;
  * the statistics.
  */
 public interface PredictionComparator extends ResultComparator {
+	public PredictionStatistics compare(StandardPredicate predicate);
 
-	public PredictionStatistics compare(Predicate p);
-	
-	public PredictionStatistics compare(Predicate p, int maxBaseAtoms);
-	
+	public PredictionStatistics compare(StandardPredicate predicate, int maxBaseAtoms);
+
 }

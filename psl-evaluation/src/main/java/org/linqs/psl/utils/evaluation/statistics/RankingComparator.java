@@ -17,12 +17,10 @@
  */
 package org.linqs.psl.utils.evaluation.statistics;
 
-import org.linqs.psl.model.predicate.Predicate;
+import org.linqs.psl.model.predicate.StandardPredicate;
 
 public interface RankingComparator extends ResultComparator {
-
 	public void setRankingScore(RankingScore score);
-	
-	public double compare(Predicate p);
-	
+
+	public double compare(StandardPredicate predicate);
 }

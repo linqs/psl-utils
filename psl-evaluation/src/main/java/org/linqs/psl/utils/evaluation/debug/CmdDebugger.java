@@ -142,7 +142,7 @@ public class CmdDebugger implements Debugger {
 	
 	private void queryPredicate(String predicate) {
 		try {
-			Predicate p = predicateFactory.getPredicate(predicate);
+			StandardPredicate p = (StandardPredicate)predicateFactory.getPredicate(predicate);
 			printAtoms(getConsideredAtoms(p));
 		} catch (IllegalArgumentException e) {
 			error(e.getMessage());
@@ -177,15 +177,15 @@ public class CmdDebugger implements Debugger {
 				args[i-1]=(String)queryParts[i];
 			}
 			try {
-				Predicate p = predicateFactory.getPredicate(predicate);
-				printAtoms(getConsideredAtoms(p, Queries.convertArguments(db, p, args)));
+				StandardPredicate p = (StandardPredicate)predicateFactory.getPredicate(predicate);
+				printAtoms(getConsideredAtoms(p, Queries.convertArguments(p, args)));
 			} catch (IllegalArgumentException e) {
 				error(e.getMessage());
 			}
 		}
 	}
 	
-	private List<GroundAtom> getConsideredAtoms(Predicate p) {
+	private List<GroundAtom> getConsideredAtoms(StandardPredicate p) {
 		Term[] args = new Term[p.getArity()];
 		for (int i = 0; i < args.length; i++) {
 			args[i] = new Variable("Arg_" + i);
@@ -193,7 +193,7 @@ public class CmdDebugger implements Debugger {
 		return getConsideredAtoms(p, args);
 	}
 	
-	private List<GroundAtom> getConsideredAtoms(Predicate p, Term[] args) {
+	private List<GroundAtom> getConsideredAtoms(StandardPredicate p, Term[] args) {
 		if (!(p instanceof StandardPredicate))
 			throw new IllegalArgumentException("Only StandardPredicates can be retrieved.");
 		ResultList res  = db.executeQuery(new DatabaseQuery(new QueryAtom(p, args)));

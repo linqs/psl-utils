@@ -34,6 +34,7 @@ import org.linqs.psl.model.predicate.PredicateFactory;
 import org.linqs.psl.model.predicate.StandardPredicate;
 import org.linqs.psl.model.term.Constant;
 import org.linqs.psl.model.term.ConstantType;
+import org.linqs.psl.model.term.UniqueIntID;
 
 public class DiscretePredictionComparatorTest {
 
@@ -49,7 +50,7 @@ public class DiscretePredictionComparatorTest {
 		PredicateFactory factory = PredicateFactory.getFactory();
 		predicate = factory.createStandardPredicate(
 				"DiscretePredictionComparatorTest_same"
-				, new ConstantType[]{ConstantType.UniqueID, ConstantType.UniqueID}
+				, new ConstantType[]{ConstantType.UniqueIntID, ConstantType.UniqueIntID}
 			);
 		
 		// Instantiate an in-memory database
@@ -60,14 +61,14 @@ public class DiscretePredictionComparatorTest {
 		
 		// create some canned ground inference atoms
 		// The size 5 corresponds to NUM_GROUND_INF_ATOMS
-		// The number 6 of unique keys passed in ds.getUniqueID (1,2,3,4,5,6) 
+		// The number 6 of unique keys passed in new UniqueIntID(1,2,3,4,5,6) 
 		//    corresponds to NUM_UNIQ_CONSTANTS
 		Constant[][] cannedTerms = new Constant[5][];
-		cannedTerms[0] = new Constant[]{ ds.getUniqueID(1), ds.getUniqueID(2) };
-		cannedTerms[1] = new Constant[]{ ds.getUniqueID(2), ds.getUniqueID(1) };
-		cannedTerms[2] = new Constant[]{ ds.getUniqueID(3), ds.getUniqueID(4) };
-		cannedTerms[3] = new Constant[]{ ds.getUniqueID(5), ds.getUniqueID(6) };
-		cannedTerms[4] = new Constant[]{ ds.getUniqueID(6), ds.getUniqueID(5) };
+		cannedTerms[0] = new Constant[]{ new UniqueIntID(1), new UniqueIntID(2) };
+		cannedTerms[1] = new Constant[]{ new UniqueIntID(2), new UniqueIntID(1) };
+		cannedTerms[2] = new Constant[]{ new UniqueIntID(3), new UniqueIntID(4) };
+		cannedTerms[3] = new Constant[]{ new UniqueIntID(5), new UniqueIntID(6) };
+		cannedTerms[4] = new Constant[]{ new UniqueIntID(6), new UniqueIntID(5) };
 		
 		// Store this in the "results" database
 		for (Constant[] terms : cannedTerms) {
@@ -78,10 +79,10 @@ public class DiscretePredictionComparatorTest {
 		
 		// create some ground truth atoms
 		Constant[][] baselineTerms = new Constant[4][];
-		baselineTerms[0] = new Constant[]{ ds.getUniqueID(1), ds.getUniqueID(2) };
-		baselineTerms[1] = new Constant[]{ ds.getUniqueID(2), ds.getUniqueID(1) };
-		baselineTerms[2] = new Constant[]{ ds.getUniqueID(3), ds.getUniqueID(4) };
-		baselineTerms[3] = new Constant[]{ ds.getUniqueID(4), ds.getUniqueID(3) };
+		baselineTerms[0] = new Constant[]{ new UniqueIntID(1), new UniqueIntID(2) };
+		baselineTerms[1] = new Constant[]{ new UniqueIntID(2), new UniqueIntID(1) };
+		baselineTerms[2] = new Constant[]{ new UniqueIntID(3), new UniqueIntID(4) };
+		baselineTerms[3] = new Constant[]{ new UniqueIntID(4), new UniqueIntID(3) };
 		
 		// Store this in the "baseline" database
 		for (Constant[] terms : baselineTerms) {

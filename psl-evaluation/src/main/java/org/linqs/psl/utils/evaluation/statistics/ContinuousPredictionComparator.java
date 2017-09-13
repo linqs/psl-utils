@@ -61,6 +61,9 @@ public class ContinuousPredictionComparator implements ResultComparator {
 	 * @return
 	 */
 	public double compare(Predicate p) {
+		//TEST
+        long startTime = System.nanoTime();
+
 		double score = 0.0;
 		int total = 0;
 		/* Result atoms */
@@ -71,6 +74,11 @@ public class ContinuousPredictionComparator implements ResultComparator {
 			score += accumulate(label.getValue() - pred.getValue());
 			total++;
 		}
+
+        //TEST
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime) / 1000000;
+        System.out.println("ContinuousPredictionStatistics.compare took " + duration + " milliseconds");
 
 		return score / total;
 	}

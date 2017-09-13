@@ -77,7 +77,15 @@ public class DiscretePredictionComparator implements PredictionComparator {
 	 */
 	@Override
 	public DiscretePredictionStatistics compare(Predicate p) {
+		//TEST
+        long startTime = System.nanoTime();
+
 		countResultDBStats(p);
+
+        //TEST
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime) / 1000000;
+        System.out.println("DiscretePredictionStatistics.compare took " + duration + " milliseconds");
 		return new DiscretePredictionStatistics(tp, fp, tn, fn, threshold, errors, correctAtoms);
 	}
 	
@@ -90,6 +98,7 @@ public class DiscretePredictionComparator implements PredictionComparator {
 	 */
 	@Override
 	public DiscretePredictionStatistics compare(Predicate p, int maxBaseAtoms) {
+
 		countResultDBStats(p);
 		
 		Iterator<GroundAtom> res = resultFilter.filter(Queries.getAllAtoms(baseline, p).iterator());
@@ -109,6 +118,7 @@ public class DiscretePredictionComparator implements PredictionComparator {
 		}
 		
 		tn = maxBaseAtoms - tp - fp - fn;
+
 		return new DiscretePredictionStatistics(tp, fp, tn, fn, threshold, errors, correctAtoms);
 	}
 	

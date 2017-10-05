@@ -31,7 +31,7 @@ import com.wcohen.ss.Level2Levenstein;
  * Level 2 means that tokens are broken up before comparison.
  * If the similarity is below a threshold (default=0.5) it returns 0.
  */
-class Level2LevenshteinSimilarity implements ExternalFunction {
+public class Level2LevenshteinSimilarity implements ExternalFunction {
 	// similarity threshold (default=0.5)
 	private double simThresh;
 
@@ -42,7 +42,7 @@ class Level2LevenshteinSimilarity implements ExternalFunction {
 	public Level2LevenshteinSimilarity(double simThresh) {
 		this.simThresh = simThresh;
 	}
-	
+
 	@Override
 	public int getArity() {
 		return 2;
@@ -52,20 +52,20 @@ class Level2LevenshteinSimilarity implements ExternalFunction {
 	public ConstantType[] getArgumentTypes() {
 		return new ConstantType[] { ConstantType.String, ConstantType.String };
 	}
-	
+
 	@Override
 	public double getValue(ReadOnlyDatabase db, Constant... args) {
 		String a = ((StringAttribute) args[0]).getValue();
 		String b = ((StringAttribute) args[1]).getValue();
 		BasicStringWrapper aWrapped = new BasicStringWrapper(a);
 		BasicStringWrapper bWrapped = new BasicStringWrapper(b);
-		
+
 		Level2Levenstein leven = new Level2Levenstein();
 		double sim = leven.score(aWrapped, bWrapped);
-		
-		if (sim < simThresh) 
+
+		if (sim < simThresh)
 			return 0.0;
-		else 
+		else
 			return sim;
     }
 }

@@ -30,7 +30,7 @@ import com.wcohen.ss.JaroWinkler;
  * Wraps the Jaro-Winkler string similarity from the Second String library.
  * If the similarity is below a threshold (default=0.5) it returns 0.
  */
-class JaroWinklerSimilarity implements ExternalFunction {
+public class JaroWinklerSimilarity implements ExternalFunction {
 	// similarity threshold (default=0.5)
 	private double simThresh;
 
@@ -41,7 +41,7 @@ class JaroWinklerSimilarity implements ExternalFunction {
 	public JaroWinklerSimilarity(double simThresh) {
 		this.simThresh = simThresh;
 	}
-	
+
 	@Override
 	public int getArity() {
 		return 2;
@@ -51,20 +51,20 @@ class JaroWinklerSimilarity implements ExternalFunction {
 	public ConstantType[] getArgumentTypes() {
 		return new ConstantType[] { ConstantType.String, ConstantType.String };
 	}
-	
+
 	@Override
 	public double getValue(ReadOnlyDatabase db, Constant... args) {
 		String a = ((StringAttribute) args[0]).getValue();
 		String b = ((StringAttribute) args[1]).getValue();
 		BasicStringWrapper aWrapped = new BasicStringWrapper(a);
 		BasicStringWrapper bWrapped = new BasicStringWrapper(b);
-		
+
 		JaroWinkler jaroW = new JaroWinkler();
 		double sim = jaroW.score(aWrapped, bWrapped);
-		
-		if (sim < simThresh) 
+
+		if (sim < simThresh)
 			return 0.0;
-		else 
+		else
 			return sim;
     }
 }

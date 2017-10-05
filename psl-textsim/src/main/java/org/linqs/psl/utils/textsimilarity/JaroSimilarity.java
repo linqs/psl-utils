@@ -30,7 +30,7 @@ import com.wcohen.ss.Jaro;
  * Wraps the Jaro string similarity from the Second String library.
  * If the similarity is below a threshold (default=0.5) it returns 0.
  */
-class JaroSimilarity implements ExternalFunction {
+public class JaroSimilarity implements ExternalFunction {
 	// similarity threshold (default=0.5)
 	private double simThresh;
 
@@ -41,7 +41,7 @@ class JaroSimilarity implements ExternalFunction {
 	public JaroSimilarity(double simThresh) {
 		this.simThresh = simThresh;
 	}
-	
+
 	@Override
 	public int getArity() {
 		return 2;
@@ -51,20 +51,20 @@ class JaroSimilarity implements ExternalFunction {
 	public ConstantType[] getArgumentTypes() {
 		return new ConstantType[] { ConstantType.String, ConstantType.String };
 	}
-	
+
 	@Override
 	public double getValue(ReadOnlyDatabase db, Constant... args) {
 		String a = ((StringAttribute) args[0]).getValue();
 		String b = ((StringAttribute) args[1]).getValue();
 		BasicStringWrapper aWrapped = new BasicStringWrapper(a);
 		BasicStringWrapper bWrapped = new BasicStringWrapper(b);
-		
+
 		Jaro jaro = new Jaro();
 		double sim = jaro.score(aWrapped, bWrapped);
-		
-		if (sim < simThresh) 
+
+		if (sim < simThresh)
 			return 0.0;
-		else 
+		else
 			return sim;
     }
 }

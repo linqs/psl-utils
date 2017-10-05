@@ -28,8 +28,8 @@ import org.linqs.psl.model.term.StringAttribute;
  * input strings contain the same number of tokens,
  * and 0 otherwise.
  */
-class SameNumTokens implements ExternalFunction {
-	
+public class SameNumTokens implements ExternalFunction {
+
 	@Override
 	public int getArity() {
 		return 2;
@@ -39,7 +39,7 @@ class SameNumTokens implements ExternalFunction {
 	public ConstantType[] getArgumentTypes() {
 		return new ConstantType[] { ConstantType.String, ConstantType.String };
 	}
-	
+
 	@Override
 	public double getValue(ReadOnlyDatabase db, Constant... args) {
 		String a = ((StringAttribute) args[0]).getValue();

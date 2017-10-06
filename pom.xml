@@ -39,12 +39,12 @@
 	</organization>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<psl-core-version>CANARY</psl-core-version>
+		<psl-core-version>2.1.0-SNAPSHOT</psl-core-version>
 	</properties>
 
 	<modules>
 		<module>psl-dataloading</module>
-		<module>psl-evaluation</module>
+		<module>psl-evaluation-extended</module>
 		<module>psl-graph</module>
 		<module>psl-textsim</module>
 	</modules>

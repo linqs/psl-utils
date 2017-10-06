@@ -15,29 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.linqs.psl.utils.evaluation.statistics.filter;
+package org.linqs.psl.utils.evaluation.statistics;
 
-import java.util.Iterator;
+import org.linqs.psl.evaluation.statistics.ResultComparator;
+import org.linqs.psl.model.predicate.StandardPredicate;
 
-import org.linqs.psl.model.atom.GroundAtom;
+public interface RankingComparator extends ResultComparator {
+	public void setRankingScore(RankingScore score);
 
-/**
- * Filters an Iterator over {@link GroundAtom GroundAtoms} according
- * to some criterion.
- * <p>
- * Can be chained together.
- */
-public interface AtomFilter {
-
-	public static final AtomFilter NoFilter = new AtomFilter() {
-
-		@Override
-		public Iterator<GroundAtom> filter(Iterator<GroundAtom> input) {
-			return input;
-		}
-		
-	};
-	
-	Iterator<GroundAtom> filter(Iterator<GroundAtom> input);
-	
+	public double compare(StandardPredicate predicate);
 }

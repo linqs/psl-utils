@@ -26,7 +26,7 @@ import java.util.List;
 import org.apache.commons.collections4.set.ListOrderedSet;
 import org.linqs.psl.database.Database;
 import org.linqs.psl.database.Queries;
-import org.linqs.psl.utils.evaluation.statistics.filter.AtomFilter;
+import org.linqs.psl.evaluation.statistics.filter.AtomFilter;
 import org.linqs.psl.model.atom.GroundAtom;
 import org.linqs.psl.model.predicate.StandardPredicate;
 import org.slf4j.Logger;

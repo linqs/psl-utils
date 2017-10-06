@@ -8,7 +8,7 @@ This repository contains utilities to allow easier development of PSL models.
 
 The following modules are provided by psl-utils:
  - psl-dataloading
- - psl-evaluation
+ - psl-evaluation-extended
  - psl-graph
  - psl-textsim
 

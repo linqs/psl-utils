@@ -17,6 +17,9 @@
  */
 package org.linqs.psl.utils.evaluation.statistics;
 
+import org.linqs.psl.evaluation.statistics.PredictionStatistics;
+import org.linqs.psl.evaluation.statistics.ResultComparator;
+
 public class MulticlassPredictionStatistics implements PredictionStatistics {
 
 	private final ConfusionMatrix cm;

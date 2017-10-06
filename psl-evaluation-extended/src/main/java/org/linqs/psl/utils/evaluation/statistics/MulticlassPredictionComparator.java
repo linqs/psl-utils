@@ -24,8 +24,10 @@ import java.util.Map.Entry;
 
 import org.linqs.psl.database.Database;
 import org.linqs.psl.database.Queries;
-import org.linqs.psl.utils.evaluation.statistics.filter.AtomFilter;
-import org.linqs.psl.utils.evaluation.statistics.filter.MaxValueFilter;
+import org.linqs.psl.evaluation.statistics.PredictionStatistics;
+import org.linqs.psl.evaluation.statistics.ResultComparator;
+import org.linqs.psl.evaluation.statistics.filter.AtomFilter;
+import org.linqs.psl.evaluation.statistics.filter.MaxValueFilter;
 import org.linqs.psl.model.atom.GroundAtom;
 import org.linqs.psl.model.predicate.StandardPredicate;
 import org.linqs.psl.model.term.Constant;

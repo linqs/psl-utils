@@ -16,8 +16,6 @@ owner=$(echo "$TRAVIS_REPO_SLUG" | sed 's#/.\+$##')
 repo='psl'
 gitUrl="https://github.com/${owner}/${repo}.git"
 
-pushd .
-
 rm -Rf "${BUILD_DIR}"
 mkdir -p "${BUILD_DIR}"
 cd "${BUILD_DIR}"
@@ -27,5 +25,3 @@ cd "${repo}"
 git checkout "${branch}"
 
 mvn clean install -DskipTests
-
-popd

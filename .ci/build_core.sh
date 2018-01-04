@@ -13,7 +13,7 @@ fi
 
 # We will always use the same owner for PSL core as this repo's owner.
 owner=$(echo "$TRAVIS_REPO_SLUG" | sed 's#/.\+$##')
-repo=$(echo "$TRAVIS_REPO_SLUG" | sed 's#^.\+/##')
+repo='psl'
 gitUrl="https://github.com/${owner}/${repo}.git"
 
 pushd .

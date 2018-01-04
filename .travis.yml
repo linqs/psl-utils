@@ -1,1 +1,4 @@
 language: java
+
+before_script:
+   - ./.ci/build_core.sh

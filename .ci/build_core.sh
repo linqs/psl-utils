@@ -14,13 +14,16 @@ fi
 
 # We will always use the same owner for PSL core as this repo's owner.
 owner=$(echo "$TRAVIS_REPO_SLUG" | sed 's#/.\+$##')
-gitUrl="https://github.com/${owner}/${repo}.git"
 
 for repo in "${TARGET_REPOS}"; do
+   echo "Building ${repo}/${branch}..."
+
+   cd
    rm -Rf "${BUILD_DIR}"
    mkdir -p "${BUILD_DIR}"
    cd "${BUILD_DIR}"
 
+   gitUrl="https://github.com/${owner}/${repo}.git"
    git clone "${gitUrl}"
    cd "${repo}"
    git checkout "${branch}"

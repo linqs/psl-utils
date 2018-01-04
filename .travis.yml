@@ -1,4 +1,4 @@
 language: java
 
-before_script:
+install:
    - ./.ci/build_core.sh

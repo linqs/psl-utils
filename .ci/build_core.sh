@@ -21,14 +21,15 @@ fi
 owner=$(echo "$TRAVIS_REPO_SLUG" | sed 's#/.\+$##')
 
 for repo in $TARGET_REPOS; do
-   echo "Building ${repo}/${branch}..."
+   gitUrl="https://github.com/${owner}/${repo}.git"
+
+   echo "Building ${gitUrl} (${branch}) ..."
 
    cd
    rm -Rf "${BUILD_DIR}"
    mkdir -p "${BUILD_DIR}"
    cd "${BUILD_DIR}"
 
-   gitUrl="https://github.com/${owner}/${repo}.git"
    git clone "${gitUrl}"
    cd "${repo}"
    git checkout "${branch}"

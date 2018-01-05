@@ -16,6 +16,7 @@ Additional Resources
 ====================
 
 - [PSL homepage](http://psl.linqs.org)
+- [API Refernce](https://linqs-data.soe.ucsc.edu/psl-docs/)
 - [PSL source repository](https://github.com/linqs/psl)
 - [PSL wiki](https://github.com/linqs/psl/wiki)
 - [Getting Started guide](https://github.com/linqs/psl/wiki/Core-Topics)

@@ -1,4 +1,4 @@
 language: java
 
 install:
-   - ./.ci/build_core.sh
+   - ./.ci/build_core.sh psl

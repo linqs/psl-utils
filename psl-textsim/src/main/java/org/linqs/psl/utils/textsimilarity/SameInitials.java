@@ -17,7 +17,7 @@
  */
 package org.linqs.psl.utils.textsimilarity;
 
-import org.linqs.psl.database.ReadOnlyDatabase;
+import org.linqs.psl.database.ReadableDatabase;
 import org.linqs.psl.model.function.ExternalFunction;
 import org.linqs.psl.model.term.Constant;
 import org.linqs.psl.model.term.ConstantType;
@@ -27,8 +27,7 @@ import org.linqs.psl.model.term.StringAttribute;
  * Returns 1 if the input names have the same initials
  * (ignoring case and order), and 0 otherwise.
  */
-public class SameInitials implements ExternalFunction
-{
+public class SameInitials implements ExternalFunction {
 	@Override
 	public int getArity() {
 		return 2;
@@ -40,7 +39,7 @@ public class SameInitials implements ExternalFunction
 	}
 
 	@Override
-	public double getValue(ReadOnlyDatabase db, Constant... args) {
+	public double getValue(ReadableDatabase db, Constant... args) {
 		String a = ((StringAttribute) args[0]).getValue();
 		String b = ((StringAttribute) args[1]).getValue();
 		String[] tokens0 = a.split("\\s+");
@@ -61,13 +60,13 @@ public class SameInitials implements ExternalFunction
 				return 0.0;
 
 		return 1.0;
-    }
+	 }
 
-    static void updateHistogram(char initial, int[] histogram) {
-    	int code = (int) initial - 97;
-    	if (code < 0 || code > 25)
-    		code = 26;
+	 static void updateHistogram(char initial, int[] histogram) {
+	 	int code = (int) initial - 97;
+	 	if (code < 0 || code > 25)
+	 		code = 26;
 
-    	histogram[code]++;
-    }
+	 	histogram[code]++;
+	 }
 }

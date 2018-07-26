@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.linqs.psl.database.ReadOnlyDatabase;
+import org.linqs.psl.database.ReadableDatabase;
 import org.linqs.psl.model.function.ExternalFunction;
 import org.linqs.psl.model.term.Constant;
 import org.linqs.psl.model.term.ConstantType;
@@ -58,7 +58,7 @@ public class DiceSimilarity implements ExternalFunction {
 	}
 
 	@Override
-	public double getValue(ReadOnlyDatabase db, Constant... args) {
+	public double getValue(ReadableDatabase db, Constant... args) {
 		String a = ((StringAttribute) args[0]).getValue();
 		String b = ((StringAttribute) args[1]).getValue();
 

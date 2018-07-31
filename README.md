@@ -8,15 +8,17 @@ This repository contains utilities to allow easier development of PSL models.
 
 The following modules are provided by psl-utils:
  - psl-dataloading
- - psl-evaluation
+ - psl-evaluation-extended
  - psl-graph
  - psl-textsim
 
 Additional Resources
 ====================
-
-- [PSL homepage](http://psl.linqs.org)
-- [PSL source repository](https://github.com/linqs/psl)
-- [PSL wiki](https://github.com/linqs/psl/wiki)
-- [Getting Started guide](https://github.com/linqs/psl/wiki/Core-Topics)
-- [User group](https://groups.google.com/forum/#!forum/psl-users)
+- [PSL Homepage](http://psl.linqs.org)
+- [PSL Examples](https://github.com/linqs/psl-examples)
+- [API Reference](https://linqs-data.soe.ucsc.edu/psl-docs/)
+- [PSL Source Repository](https://github.com/linqs/psl)
+- [PSL Development Repository](https://github.com/eriq-augustine/psl)
+- [PSL Utils Repository](https://github.com/linqs/psl-utils)
+- [PSL Experimental Repository](https://github.com/linqs/psl-experimental)
+- [User Group](https://groups.google.com/forum/#!forum/psl-users)

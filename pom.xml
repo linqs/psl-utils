@@ -2,7 +2,7 @@
 <!--
   - This file is part of the PSL software.
   - Copyright 2011-2015 University of Maryland
-  - Copyright 2013-2017 The Regents of the University of California
+  - Copyright 2013-2018 The Regents of the University of California
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 	<groupId>org.linqs</groupId>
 	<artifactId>psl-utils</artifactId>
 	<name>psl-utils</name>
-	<version>1.0.0</version>
+	<version>2.1.0</version>
 	<packaging>pom</packaging>
 	<description>Utilities for the PSL software from the LINQS research group.</description>
 	<licenses>
@@ -39,12 +39,12 @@
 	</organization>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<psl-core-version>2.0.0</psl-core-version>
+		<psl-core-version>2.1.0</psl-core-version>
 	</properties>
 
 	<modules>
 		<module>psl-dataloading</module>
-		<module>psl-evaluation</module>
+		<module>psl-evaluation-extended</module>
 		<module>psl-graph</module>
 		<module>psl-textsim</module>
 	</modules>
@@ -104,6 +104,7 @@
 					<target>1.7</target>
 					<compilerArgs>
 						<arg>-Xlint:deprecation</arg>
+						<arg>-Xlint:all</arg>
 					</compilerArgs>
 				</configuration>
 			</plugin>

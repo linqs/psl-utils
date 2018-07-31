@@ -1,7 +1,7 @@
 /*
  * This file is part of the PSL software.
  * Copyright 2011-2015 University of Maryland
- * Copyright 2013-2017 The Regents of the University of California
+ * Copyright 2013-2018 The Regents of the University of California
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  */
 package org.linqs.psl.utils.textsimilarity;
 
-import org.linqs.psl.database.ReadOnlyDatabase;
+import org.linqs.psl.database.ReadableDatabase;
 import org.linqs.psl.model.function.ExternalFunction;
 import org.linqs.psl.model.term.Constant;
 import org.linqs.psl.model.term.ConstantType;
@@ -30,24 +30,21 @@ import cern.colt.map.tdouble.AbstractIntDoubleMap;
 import cern.colt.map.tdouble.OpenIntDoubleHashMap;
 
 public class CosineSimilarity implements ExternalFunction {
+	private static final double EPSILON = 1e-5;
+	private static final double DEFAULT_SIM_THRESHOLD = 0.4;
 
 	private static final Logger log = LoggerFactory.getLogger(CosineSimilarity.class);
-	private static final double epsilon = 1e-5;
-	private static final double defaultSimilarityThreshold = 0.4;
-	
-	private int numComputed=0;
-	
+
 	private final double similarityThreshold;
 
-	
 	public CosineSimilarity() {
-		this(defaultSimilarityThreshold);
-	}	
-	
-	public CosineSimilarity(double threshold) {
-		similarityThreshold=threshold;
+		this(DEFAULT_SIM_THRESHOLD);
 	}
-	
+
+	public CosineSimilarity(double threshold) {
+		similarityThreshold = threshold;
+	}
+
 	@Override
 	public int getArity() {
 		return 2;
@@ -57,40 +54,48 @@ public class CosineSimilarity implements ExternalFunction {
 	public ConstantType[] getArgumentTypes() {
 		return new ConstantType[] { ConstantType.String, ConstantType.String };
 	}
-	
+
 	@Override
-	public double getValue(ReadOnlyDatabase db, Constant... args) {
+	public double getValue(ReadableDatabase db, Constant... args) {
 		String a = ((StringAttribute) args[0]).getValue();
 		String b = ((StringAttribute) args[1]).getValue();
 
-		WordVector vec1, vec2;
-		vec1 = getVector(a);
-		vec2 = getVector(b);
-		double result = cosineSimilarity(vec1,vec2);
-		numComputed++;
-		if (numComputed%10000==0) log.debug("Num computed{} | Similarity {}",numComputed,result);
-		if (result>similarityThreshold) return result;
-		else return 0.0;
+		WordVector vec1 = getVector(a);
+		WordVector vec2 = getVector(b);
+
+		double result = cosineSimilarity(vec1, vec2);
+		if (result > similarityThreshold) {
+			return result;
+		}
+
+		return 0.0;
 	}
 
 	public String toString() {
-		return "Cosine Similarity";
+		return String.format("CosineSimilarity(%f)", similarityThreshold);
 	}
 
-	public static WordVector getVector(String s) {
+	private static WordVector getVector(String text) {
+		// Cleanup whitespace.
+		text = text.replaceAll("\\s+", " ").trim();
+
 		WordVector vec = new WordVector();
-		if (!s.isEmpty()) {
-			String[] entries = s.split(" ");
-			assert entries.length>0;
-			for (int i=0;i<entries.length;i++) {
-				String[] entry = entries[i].split(":");
-				assert entry.length==2 : entries[i] + " | " + s + ">";
-				vec.addWord(Integer.parseInt(entry[0]),Double.parseDouble(entry[1]));
-			}
+		if (text.isEmpty()) {
+			return vec;
 		}
+
+		String[] entries = text.split(" ");
+		assert(entries.length > 0);
+
+		for (int i = 0; i < entries.length; i++) {
+			String[] entry = entries[i].split(":");
+			assert entry.length==2 : entries[i] + " | " + text + ">";
+			vec.addWord(Integer.parseInt(entry[0]),Double.parseDouble(entry[1]));
+		}
+
 		return vec;
 	}
-	
+
 	private static double vecLength(WordVector vec) {
 		double[] vals = vec.values().elements();
 		double total = 0.0;
@@ -99,7 +104,7 @@ public class CosineSimilarity implements ExternalFunction {
 		}
 		return Math.sqrt(total);
 	}
-	
+
 	private static double multiplyVec(WordVector vecA, WordVector vecB) {
 		AbstractIntDoubleMap vec1=vecA,vec2=vecB;
 		if (vecB.size()<vecA.size()) {
@@ -114,24 +119,24 @@ public class CosineSimilarity implements ExternalFunction {
 		}
 		return total;
 	}
-	
+
 	public static double cosineSimilarity(WordVector vec1, WordVector vec2) {
 		double len1 = vecLength(vec1);
 		double len2 = vecLength(vec2);
 		double result = 0.0;
 		if (len1>0.0 && len2>0.0) result = multiplyVec(vec1,vec2)/(len1*len2);
-		assert result>=(0.0-epsilon) && result<=(1.0+epsilon);
+		assert result>=(0.0-EPSILON) && result<=(1.0+EPSILON);
 		return result;
 	}
 
 	public static class WordVector extends OpenIntDoubleHashMap {
 
 		private static final long serialVersionUID = 2045184972598485102L;
-		
+
 		public int getNumWords() {
 			return this.size();
 		}
-		
+
 		public int getMaxWordIndex() {
 			IntArrayList key = this.keys();
 			int[] vals = key.elements();
@@ -141,11 +146,10 @@ public class CosineSimilarity implements ExternalFunction {
 			}
 			return max;
 		}
-		
+
 		public void addWord(int index, double val) {
 			put(index,val);
 		}
-		
+
 	}
-	
 }

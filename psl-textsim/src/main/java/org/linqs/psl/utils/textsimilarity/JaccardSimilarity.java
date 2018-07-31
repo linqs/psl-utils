@@ -1,7 +1,7 @@
 /*
  * This file is part of the PSL software.
  * Copyright 2011-2015 University of Maryland
- * Copyright 2013-2017 The Regents of the University of California
+ * Copyright 2013-2018 The Regents of the University of California
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  */
 package org.linqs.psl.utils.textsimilarity;
 
-import org.linqs.psl.database.ReadOnlyDatabase;
+import org.linqs.psl.database.ReadableDatabase;
 import org.linqs.psl.model.function.ExternalFunction;
 import org.linqs.psl.model.term.Constant;
 import org.linqs.psl.model.term.ConstantType;
@@ -30,7 +30,7 @@ import com.wcohen.ss.Jaccard;
  * Wraps the Jaccard string similarity from the Second String library.
  * If the similarity is below a threshold (default=0.5) it returns 0.
  */
-class JaccardSimilarity implements ExternalFunction {
+public class JaccardSimilarity implements ExternalFunction {
 	// similarity threshold (default=0.5)
 	private double simThresh;
 
@@ -41,7 +41,7 @@ class JaccardSimilarity implements ExternalFunction {
 	public JaccardSimilarity(double simThresh) {
 		this.simThresh = simThresh;
 	}
-	
+
 	@Override
 	public int getArity() {
 		return 2;
@@ -51,20 +51,20 @@ class JaccardSimilarity implements ExternalFunction {
 	public ConstantType[] getArgumentTypes() {
 		return new ConstantType[] { ConstantType.String, ConstantType.String };
 	}
-	
+
 	@Override
-	public double getValue(ReadOnlyDatabase db, Constant... args) {
+	public double getValue(ReadableDatabase db, Constant... args) {
 		String a = ((StringAttribute) args[0]).getValue();
 		String b = ((StringAttribute) args[1]).getValue();
 		BasicStringWrapper aWrapped = new BasicStringWrapper(a);
 		BasicStringWrapper bWrapped = new BasicStringWrapper(b);
-		
+
 		Jaccard jaccard = new Jaccard();
 		double sim = jaccard.score(aWrapped, bWrapped);
-		
-		if (sim < simThresh) 
+
+		if (sim < simThresh)
 			return 0.0;
-		else 
+		else
 			return sim;
-    }
+	 }
 }

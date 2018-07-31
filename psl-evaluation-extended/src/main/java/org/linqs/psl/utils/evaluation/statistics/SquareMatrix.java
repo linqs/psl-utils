@@ -25,33 +25,26 @@ import cern.colt.matrix.tdouble.impl.DenseDoubleMatrix2D;
 /**
  * Square matrix data structure.
  * Basically, a wrapper for ParallelColt DenseDoubleMatrix2D, with some specialized methods.
- * 
- * @author blondon
- *
  */
 public class SquareMatrix {
-	
+
 	/**
 	 * NOTE: Due to some weird bug in Parallel Colt and/or Groovy,
 	 * 		 you can't instantiate a (subclass of a) DenseDoubleMatrix2D
-	 * 		 in Groovy. Due to this, I have implemented this class as a 
-	 * 		 wrapper instead of a subclass. 
+	 * 		 in Groovy. Due to this, I have implemented this class as a
+	 * 		 wrapper instead of a subclass.
 	 */
 	private DenseDoubleMatrix2D mat;
-	
+
 	/**
 	 * Initializes an empty square matrix of size length x length.
-	 * 
-	 * @param length
 	 */
 	public SquareMatrix(int length) {
 		mat = new DenseDoubleMatrix2D(length, length);
 	}
-	
+
 	/**
 	 * Copy constructor.
-	 * 
-	 * @param sm
 	 */
 	public SquareMatrix(final SquareMatrix sm) {
 		mat = new DenseDoubleMatrix2D(sm.length(), sm.length());
@@ -59,33 +52,23 @@ public class SquareMatrix {
 			for (int j = 0; j < sm.length(); j++)
 				set(i,j,sm.get(i,j));
 	}
-	
+
 	/**
 	 * Returns the number of classes (labels).
-	 * 
-	 * @return
 	 */
 	public int length() {
 		return mat.rows();
 	}
-	
+
 	/**
 	 * Get entry (i,j).
-	 * 
-	 * @param i
-	 * @param j
-	 * @return
 	 */
 	public double get(int i, int j) {
 		return mat.get(i, j);
 	}
-	
+
 	/**
 	 * Set entry (i,j).
-	 * 
-	 * @param i
-	 * @param j
-	 * @param value
 	 */
 	public void set(int i, int j, double value) {
 		mat.set(i, j, value);
@@ -93,8 +76,6 @@ public class SquareMatrix {
 
 	/**
 	 * Accumulates the scores from another square matrix.
-	 * 
-	 * @param sm
 	 */
 	public void accumulate(SquareMatrix sm) {
 		for (int i = 0; i < length(); i++) {
@@ -104,11 +85,9 @@ public class SquareMatrix {
 			}
 		}
 	}
-	
+
 	/**
 	 * Accumulates the scores from a collection of square matrices.
-	 * 
-	 * @param sms
 	 */
 	public void accumulate(Collection<SquareMatrix> sms) {
 		if (sms.size() == 0)
@@ -117,12 +96,9 @@ public class SquareMatrix {
 		while (iter.hasNext())
 			accumulate(iter.next());
 	}
-	
+
 	/**
 	 * Aggregates the scores of a collection of square matrices.
-	 * 
-	 * @param sms
-	 * @return
 	 */
 	public static SquareMatrix aggregate(Collection<SquareMatrix> sms) {
 		if (sms.size() == 0)
@@ -136,9 +112,6 @@ public class SquareMatrix {
 
 	/**
 	 * Averages the scores of an array of square matrices.
-	 * 
-	 * @param sms
-	 * @return
 	 */
 	public static SquareMatrix average(Collection<SquareMatrix> sms) {
 		SquareMatrix sm = aggregate(sms);
@@ -147,7 +120,7 @@ public class SquareMatrix {
 				sm.set(i,j,sm.get(i,j)/(double)sms.size());
 			}
 		}
-		return sm;		
+		return sm;
 	}
 
 	/**
@@ -157,14 +130,12 @@ public class SquareMatrix {
 	public String toString() {
 		return mat.toString();
 	}
-	
+
 	/**
 	 * Returns a Matlab string representation of the matrix.
-	 * 
-	 * @return
 	 */
 	public String toMatlabString(int numDigits) {
-		/* Zero-pad decimals by numDigits digits. */ 
+		/* Zero-pad decimals by numDigits digits. */
 		String format = "%." + numDigits + "f";
 
 		/* Build output string. */
@@ -184,7 +155,7 @@ public class SquareMatrix {
 			else
 				sb.append(" ;\n");
 		}
-		
+
 		return sb.toString();
 	}
 
@@ -195,5 +166,4 @@ public class SquareMatrix {
 	public SquareMatrix clone() {
 		return new SquareMatrix(this);
 	}
-	
 }

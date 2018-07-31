@@ -27,48 +27,48 @@ import org.linqs.psl.utils.graph.weight.RelationshipWeighter;
 public interface Partitioner {
 	/**
 	 * Define the size of the partition, i.e. the number of blocks to produce
-	 * 
+	 *
 	 * @param size Size of the partition
 	 */
 	public void setSize(int size);
-	
+
 	/**
 	 * Returns the current size of produced partitions
 	 * @return Size of partitions
 	 */
 	public int getSize();
-	
+
 	/**
 	 * Partition the set of nodes into the specified number of blocks aiming to minimize the edge
 	 * cut as specified by the RelationshipWeighter.
-	 * 
+	 *
 	 * To specify that an edge should not be cut, its weight should be Double.POSITIVE_INFINITY. In such
 	 * cases the method may produce an IllegalArgumentException if no partition could be found that satisfies
 	 * the no-cut condition.
-	 * 
+	 *
 	 * @param nodes Iterable over a set of nodes. It is assumed, that no node occurs multiple times during iteration.
 	 * @param rweight RelationshipWeighter defining the strength of relationships taken into account by the partitioning algorithm.
 	 * @return A partition of the nodes
 	 */
 	public List<List<Node>> partition(Graph g, Iterable<? extends Node> nodes, RelationshipWeighter rweight);
-	
+
 	/**
 	 * Partition the set of nodes into the specified number of blocks aiming to minimize the edge
 	 * cut as specified by the RelationshipWeighter.
-	 * 
-	 * Compared to {@link #partition(Iterable, RelationshipWeighter)}, this method expects that the user has initialized
+	 *
+	 * Compared to the other partition(), this method expects that the user has initialized
 	 * the container holding the partition, given the user more choice over what containers to use. Also, it returns
 	 * the edge cut of the produced partition.
-	 * 
+	 *
 	 * To specify that an edge should not be cut, its weight should be Double.POSITIVE_INFINITY. In such
 	 * cases the method may produce an IllegalArgumentException if no partition could be found that satisfies
 	 * the no-cut condition.
-	 * 
+	 *
 	 * @param nodes Iterable over a set of nodes. It is assumed, that no node occurs multiple times during iteration.
 	 * @param rweight RelationshipWeighter defining the strength of relationships taken into account by the partitioning algorithm.
 	 * @param partition Initialized partition container
 	 * @return The edge cut of the produced partition
 	 */
-	public double partition(Graph g, Iterable<? extends Node> nodes, RelationshipWeighter rweight, 
+	public double partition(Graph g, Iterable<? extends Node> nodes, RelationshipWeighter rweight,
 			List<? extends Collection<Node>> partition);
 }

@@ -14,10 +14,11 @@ The following modules are provided by psl-utils:
 
 Additional Resources
 ====================
-
-- [PSL homepage](http://psl.linqs.org)
-- [API Refernce](https://linqs-data.soe.ucsc.edu/psl-docs/)
-- [PSL source repository](https://github.com/linqs/psl)
-- [PSL wiki](https://github.com/linqs/psl/wiki)
-- [Getting Started guide](https://github.com/linqs/psl/wiki/Core-Topics)
-- [User group](https://groups.google.com/forum/#!forum/psl-users)
+- [PSL Homepage](http://psl.linqs.org)
+- [PSL Examples](https://github.com/linqs/psl-examples)
+- [API Reference](https://linqs-data.soe.ucsc.edu/psl-docs/)
+- [PSL Source Repository](https://github.com/linqs/psl)
+- [PSL Development Repository](https://github.com/eriq-augustine/psl)
+- [PSL Utils Repository](https://github.com/linqs/psl-utils)
+- [PSL Experimental Repository](https://github.com/linqs/psl-experimental)
+- [User Group](https://groups.google.com/forum/#!forum/psl-users)

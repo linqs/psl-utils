@@ -26,9 +26,8 @@ import cern.colt.matrix.tint.impl.DenseIntMatrix2D;
 /**
  * Confusion matrix data structure.
  * Basically, a wrapper for ParallelColt DenseIntMatrix2D, with some specialized methods.
- * 
- * @author blondon
  *
+ * @author blondon
  */
 public class ConfusionMatrix extends DenseIntMatrix2D implements Serializable {
 
@@ -39,8 +38,6 @@ public class ConfusionMatrix extends DenseIntMatrix2D implements Serializable {
 
 	/**
 	 * Initializes an empty confusion matrix of size numClasses.
-	 * 
-	 * @param numClasses
 	 */
 	public ConfusionMatrix(int numClasses) {
 		super(numClasses, numClasses);
@@ -48,16 +45,13 @@ public class ConfusionMatrix extends DenseIntMatrix2D implements Serializable {
 
 	/**
 	 * Initializes a confusion matrix from a 2D array of ints.
-	 * @param data
 	 */
 	public ConfusionMatrix(final int[][] data) {
 		super(data);
 	}
-	
+
 	/**
 	 * Copy constructor.
-	 * 
-	 * @param cm
 	 */
 	public ConfusionMatrix(final ConfusionMatrix cm) {
 		super(cm.getNumClasses(), cm.getNumClasses());
@@ -65,11 +59,9 @@ public class ConfusionMatrix extends DenseIntMatrix2D implements Serializable {
 			for (int j = 0; j < cm.getNumClasses(); j++)
 				set(i,j,cm.get(i,j));
 	}
-	
+
 	/**
 	 * Returns the number of classes (labels).
-	 * 
-	 * @return
 	 */
 	public int getNumClasses() {
 		return rows;
@@ -77,8 +69,6 @@ public class ConfusionMatrix extends DenseIntMatrix2D implements Serializable {
 
 	/**
 	 * Accumulates the scores from another confusion matrix.
-	 * 
-	 * @param cm
 	 */
 	public void accumulate(ConfusionMatrix cm) {
 		for (int i = 0; i < getNumClasses(); i++) {
@@ -88,11 +78,9 @@ public class ConfusionMatrix extends DenseIntMatrix2D implements Serializable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Accumulates the scores from a collection of confusion matrices.
-	 * 
-	 * @param cms
 	 */
 	public void accumulate(Collection<ConfusionMatrix> cms) {
 		if (cms.size() == 0)
@@ -101,12 +89,9 @@ public class ConfusionMatrix extends DenseIntMatrix2D implements Serializable {
 		while (iter.hasNext())
 			accumulate(iter.next());
 	}
-	
+
 	/**
 	 * Aggregates the scores of a collection of confusion matrices.
-	 * 
-	 * @param cms
-	 * @return
 	 */
 	public static ConfusionMatrix aggregate(Collection<ConfusionMatrix> cms) {
 		if (cms.size() == 0)
@@ -117,11 +102,9 @@ public class ConfusionMatrix extends DenseIntMatrix2D implements Serializable {
 			cm.accumulate(iter.next());
 		return cm;
 	}
-	
+
 	/**
 	 * Returns the precision matrix, computed by normlizing each entry (i,j) the sum of column j.
-	 * 
-	 * @return
 	 */
 	public SquareMatrix getPrecisionMatrix() {
 		/* Normalize entries of matrix by column sums. */
@@ -137,11 +120,9 @@ public class ConfusionMatrix extends DenseIntMatrix2D implements Serializable {
 		}
 		return normVals;
 	}
-	
+
 	/**
 	 * Returns the recall matrix, computed by normlizing each entry (i,j) the sum of row i.
-	 * 
-	 * @return
 	 */
 	public SquareMatrix getRecallMatrix() {
 		SquareMatrix normVals = new SquareMatrix(getNumClasses());
@@ -156,19 +137,17 @@ public class ConfusionMatrix extends DenseIntMatrix2D implements Serializable {
 		}
 		return new SquareMatrix(normVals);
 	}
-	
+
 	/**
 	 * Returns a Matlab string representation of the confusion matrix.
-	 * 
-	 * @return
 	 */
 	public String toMatlabString() {
 		/* Determine max value in CM. */
 		int mx = this.getMaxLocation()[0];
-		
+
 		/* Determine character width of max value. */
 		int maxCharWidth = (int)Math.log10((double)mx) + 1;
-		
+
 		/* Left-pad numbers by maxCharWidth. */
 		String format = "%" + maxCharWidth + "d";
 
@@ -199,5 +178,4 @@ public class ConfusionMatrix extends DenseIntMatrix2D implements Serializable {
 	public ConfusionMatrix clone() {
 		return new ConfusionMatrix(this);
 	}
-
 }

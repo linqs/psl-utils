@@ -20,5 +20,5 @@ package org.linqs.psl.utils.graph.weight;
 import org.linqs.psl.utils.graph.Node;
 
 public interface NodeWeighter {
-	public double getWeight(Node n);
+    public double getWeight(Node n);
 }

@@ -19,6 +19,6 @@ package org.linqs.psl.utils.dataloading.graph;
 
 public interface DegreeFunction {
 
-	public double computeDegree(String data);
-	
+    public double computeDegree(String data);
+
 }

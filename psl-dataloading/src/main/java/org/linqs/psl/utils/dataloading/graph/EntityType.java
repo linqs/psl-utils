@@ -19,6 +19,6 @@ package org.linqs.psl.utils.dataloading.graph;
 
 public interface EntityType {
 
-	public boolean hasAttributes();
-	
+    public boolean hasAttributes();
+
 }

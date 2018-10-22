@@ -42,343 +42,343 @@ import de.mathnbits.util.RandomStack;
 
 public class HierarchicalPartitioning implements Partitioner {
 
-	private static final Logger log =
-		LoggerFactory.getLogger(HierarchicalPartitioning.class);
+    private static final Logger log =
+        LoggerFactory.getLogger(HierarchicalPartitioning.class);
 
-	protected static final String relType = "connect";
-	protected static final String weightType = "weight";
+    protected static final String relType = "connect";
+    protected static final String weightType = "weight";
 
-	private static final double shrinkingThreshold = 0.7;
-	private static final int finalMultiple = 8;
-	private static final int initialMultiple = 400;
+    private static final double shrinkingThreshold = 0.7;
+    private static final int finalMultiple = 8;
+    private static final int initialMultiple = 400;
 
-	private static final int defaultNoTrials = 10;
-	private static final int defaultNoPartitions = 2;
-	private static final double defaultBalanceExponent = 1.5;
+    private static final int defaultNoTrials = 10;
+    private static final int defaultNoPartitions = 2;
+    private static final double defaultBalanceExponent = 1.5;
 
-	private double balanceExponent;
-	private int noTrials;
-	private int noPartitions;
+    private double balanceExponent;
+    private int noTrials;
+    private int noPartitions;
 
-	public HierarchicalPartitioning(int size) {
-		noPartitions=size;
-		noTrials = defaultNoTrials;
-		balanceExponent = defaultBalanceExponent;
-	}
+    public HierarchicalPartitioning(int size) {
+        noPartitions=size;
+        noTrials = defaultNoTrials;
+        balanceExponent = defaultBalanceExponent;
+    }
 
-	public HierarchicalPartitioning() {
-		this(defaultNoPartitions);
-	}
+    public HierarchicalPartitioning() {
+        this(defaultNoPartitions);
+    }
 
-	public void setNoPartitioningTrials(int trials) {
-		Preconditions.checkArgument(trials>0,"Need to provide a positive number");
-		noTrials = trials;
-	}
+    public void setNoPartitioningTrials(int trials) {
+        Preconditions.checkArgument(trials>0,"Need to provide a positive number");
+        noTrials = trials;
+    }
 
-	public int getNoPartitioningTrials() {
-		return noTrials;
-	}
+    public int getNoPartitioningTrials() {
+        return noTrials;
+    }
 
-	public double getBalanceExponent() {
-		return balanceExponent;
-	}
+    public double getBalanceExponent() {
+        return balanceExponent;
+    }
 
-	public void setBalanceExponent(double balanceExponent) {
-		this.balanceExponent = balanceExponent;
-	}
+    public void setBalanceExponent(double balanceExponent) {
+        this.balanceExponent = balanceExponent;
+    }
 
-	public static final int coarseSizeThreshold(int noPartitions) {
-		double alpha =  Math.pow(1.0/noPartitions,0.75);
-		return (int)Math.round(alpha * (initialMultiple*noPartitions) +
-				(1-alpha) * (finalMultiple * noPartitions));
-	}
+    public static final int coarseSizeThreshold(int noPartitions) {
+        double alpha =  Math.pow(1.0/noPartitions,0.75);
+        return (int)Math.round(alpha * (initialMultiple*noPartitions) +
+                (1-alpha) * (finalMultiple * noPartitions));
+    }
 
-	@Override
-	public int getSize() {
-		return noPartitions;
-	}
+    @Override
+    public int getSize() {
+        return noPartitions;
+    }
 
-	@Override
-	public void setSize(int size) {
-		noPartitions=size;
-	}
+    @Override
+    public void setSize(int size) {
+        noPartitions=size;
+    }
 
-	@Override
-	public List<List<Node>> partition(Graph g, Iterable<? extends Node> nodes,
-			RelationshipWeighter rweight) {
-		List<List<Node>> partition = new ArrayList<List<Node>>(noPartitions);
-		for (int i=0;i<noPartitions;i++) {
-			partition.add(new ArrayList<Node>());
-		}
-		partition(g, nodes,rweight,partition);
-		return partition;
-	}
+    @Override
+    public List<List<Node>> partition(Graph g, Iterable<? extends Node> nodes,
+            RelationshipWeighter rweight) {
+        List<List<Node>> partition = new ArrayList<List<Node>>(noPartitions);
+        for (int i=0;i<noPartitions;i++) {
+            partition.add(new ArrayList<Node>());
+        }
+        partition(g, nodes,rweight,partition);
+        return partition;
+    }
 
-	@Override
-	public double partition(Graph g, Iterable<? extends Node> nodes,
-			RelationshipWeighter rweight, List<? extends Collection<Node>> partition) {
-		return partition(g, nodes, rweight, new ConstantOneNodeWeighter(), partition);
-	}
+    @Override
+    public double partition(Graph g, Iterable<? extends Node> nodes,
+            RelationshipWeighter rweight, List<? extends Collection<Node>> partition) {
+        return partition(g, nodes, rweight, new ConstantOneNodeWeighter(), partition);
+    }
 
-	public double partition(Graph g, Iterable<? extends Node> nodes,
-			RelationshipWeighter rweight, NodeWeighter nweight, List<? extends Collection<Node>> partition) {
-		if (partition==null || partition.size()!=noPartitions)
-			throw new IllegalArgumentException("Partition container does not have the right size - expected: " + noPartitions);
-		for (int i=0;i<noPartitions;i++) Preconditions.checkNotNull(partition.get(i));
+    public double partition(Graph g, Iterable<? extends Node> nodes,
+            RelationshipWeighter rweight, NodeWeighter nweight, List<? extends Collection<Node>> partition) {
+        if (partition==null || partition.size()!=noPartitions)
+            throw new IllegalArgumentException("Partition container does not have the right size - expected: " + noPartitions);
+        for (int i=0;i<noPartitions;i++) Preconditions.checkNotNull(partition.get(i));
 
-		log.debug("Partitioning into {} blocks with {} trials", noPartitions,noTrials);
+        log.debug("Partitioning into {} blocks with {} trials", noPartitions,noTrials);
 
-		int level = 1;
-		int sizeThreshold = coarseSizeThreshold(noPartitions);
-		CoarseningResult coarsening = coarsen(g, nodes, nweight, rweight,level);
-		Map<Node,SuperNode> coarsemap = coarsening.map;
+        int level = 1;
+        int sizeThreshold = coarseSizeThreshold(noPartitions);
+        CoarseningResult coarsening = coarsen(g, nodes, nweight, rweight,level);
+        Map<Node,SuperNode> coarsemap = coarsening.map;
 
-		log.debug("New Size: {} | Shrinkage: {}",coarsening.getNoSuperNodes(),coarsening.getShrinkageFactor());
+        log.debug("New Size: {} | Shrinkage: {}",coarsening.getNoSuperNodes(),coarsening.getShrinkageFactor());
 
-		while (coarsening.getNoSuperNodes()>sizeThreshold &&
-				coarsening.getShrinkageFactor()<=shrinkingThreshold) {
-			//Keep coarsening
-			level++;
-			CoarseningResult nextCoarse = coarsen(g, coarsening.getSuperNodes(), coarsening.nweight, coarsening.rweight,level);
+        while (coarsening.getNoSuperNodes()>sizeThreshold &&
+                coarsening.getShrinkageFactor()<=shrinkingThreshold) {
+            //Keep coarsening
+            level++;
+            CoarseningResult nextCoarse = coarsen(g, coarsening.getSuperNodes(), coarsening.nweight, coarsening.rweight,level);
 
-			//Update coarsemap to map "through"
-			Map<Node,SuperNode> newcoarsemap = new HashMap<Node,SuperNode>(coarsemap.size());
-			for (Map.Entry<Node, SuperNode> old : coarsemap.entrySet()) {
-				newcoarsemap.put(old.getKey(), nextCoarse.map.get(old.getValue().getRepresentationNode()));
-			}
-			coarsemap = newcoarsemap;
-			coarsening = nextCoarse;
-			log.debug("New Size: {} | Shrinkage: {}",coarsening.getNoSuperNodes(),coarsening.getShrinkageFactor());
-		}
-		//Now partition
-		Set<Node> topnodes = coarsening.getSuperNodes();
+            //Update coarsemap to map "through"
+            Map<Node,SuperNode> newcoarsemap = new HashMap<Node,SuperNode>(coarsemap.size());
+            for (Map.Entry<Node, SuperNode> old : coarsemap.entrySet()) {
+                newcoarsemap.put(old.getKey(), nextCoarse.map.get(old.getValue().getRepresentationNode()));
+            }
+            coarsemap = newcoarsemap;
+            coarsening = nextCoarse;
+            log.debug("New Size: {} | Shrinkage: {}",coarsening.getNoSuperNodes(),coarsening.getShrinkageFactor());
+        }
+        //Now partition
+        Set<Node> topnodes = coarsening.getSuperNodes();
 
-		Map<Node,Integer> bestAssign = null;
-		double bestEdgeCut = Double.POSITIVE_INFINITY;
-		double bestBalance = Double.POSITIVE_INFINITY;
+        Map<Node,Integer> bestAssign = null;
+        double bestEdgeCut = Double.POSITIVE_INFINITY;
+        double bestBalance = Double.POSITIVE_INFINITY;
 
-		for (int trial=1; trial<=noTrials; trial++) {
-			Map<Node,Integer> pAssign = new HashMap<Node,Integer>();
-			List<Map<Node, Double>> pnghs = new ArrayList<Map<Node, Double>>(noPartitions);
-			double[] pweights = new double[noPartitions];
-			double edgeCut = 0.0;
-			//initial assignment
-			RandomStack<Node> rnodes = new RandomStack<Node>(topnodes);
-			for (int pid=0;pid<noPartitions;pid++) {
-				Map<Node, Double> nghs = new HashMap<Node, Double>(topnodes.size()/noPartitions);
-				pnghs.add(nghs);
-				Node n = rnodes.popRandom();
-				assert n!=null;
-				assert !pAssign.containsKey(n);
-				edgeCut += assign(n,pid,pweights,pAssign,pnghs,
-						coarsening.nweight,coarsening.rweight);
-			}
-			//assign remaining in neighborhood
-			while(!rnodes.isEmpty()) {
-				int pid = findMinPartitionBlock(pweights,pnghs);
-				if (pid<0) {
-					Node n;
-					for (pid=0; pid<noPartitions && !rnodes.isEmpty(); pid++) {
-						do {
-							n = rnodes.popRandom();
-						} while (pAssign.containsKey(n) && !rnodes.isEmpty());
-						edgeCut += assign(n, pid, pweights, pAssign, pnghs,
-								coarsening.nweight,coarsening.rweight);
-					}
-				}
-				else {
-					Node n = findMostConnected(pnghs.get(pid));
-					assert !pAssign.containsKey(n);
-					edgeCut += assign(n,pid,pweights,pAssign,pnghs,
-							coarsening.nweight,coarsening.rweight);
-				}
-			}
+        for (int trial=1; trial<=noTrials; trial++) {
+            Map<Node,Integer> pAssign = new HashMap<Node,Integer>();
+            List<Map<Node, Double>> pnghs = new ArrayList<Map<Node, Double>>(noPartitions);
+            double[] pweights = new double[noPartitions];
+            double edgeCut = 0.0;
+            //initial assignment
+            RandomStack<Node> rnodes = new RandomStack<Node>(topnodes);
+            for (int pid=0;pid<noPartitions;pid++) {
+                Map<Node, Double> nghs = new HashMap<Node, Double>(topnodes.size()/noPartitions);
+                pnghs.add(nghs);
+                Node n = rnodes.popRandom();
+                assert n!=null;
+                assert !pAssign.containsKey(n);
+                edgeCut += assign(n,pid,pweights,pAssign,pnghs,
+                        coarsening.nweight,coarsening.rweight);
+            }
+            //assign remaining in neighborhood
+            while(!rnodes.isEmpty()) {
+                int pid = findMinPartitionBlock(pweights,pnghs);
+                if (pid<0) {
+                    Node n;
+                    for (pid=0; pid<noPartitions && !rnodes.isEmpty(); pid++) {
+                        do {
+                            n = rnodes.popRandom();
+                        } while (pAssign.containsKey(n) && !rnodes.isEmpty());
+                        edgeCut += assign(n, pid, pweights, pAssign, pnghs,
+                                coarsening.nweight,coarsening.rweight);
+                    }
+                }
+                else {
+                    Node n = findMostConnected(pnghs.get(pid));
+                    assert !pAssign.containsKey(n);
+                    edgeCut += assign(n,pid,pweights,pAssign,pnghs,
+                            coarsening.nweight,coarsening.rweight);
+                }
+            }
 
-			double balance = stdDev(pweights);
+            double balance = stdDev(pweights);
 
-			log.debug("Current partitions edge cut: {} | Balance : {}",edgeCut,balance);
-			//find best partition
-			if (partitionEvaluation(edgeCut,balance)<partitionEvaluation(bestEdgeCut,bestBalance)) {
-				bestEdgeCut = edgeCut;
-				bestBalance = balance;
-				bestAssign = pAssign;
-			}
-		}
+            log.debug("Current partitions edge cut: {} | Balance : {}",edgeCut,balance);
+            //find best partition
+            if (partitionEvaluation(edgeCut,balance)<partitionEvaluation(bestEdgeCut,bestBalance)) {
+                bestEdgeCut = edgeCut;
+                bestBalance = balance;
+                bestAssign = pAssign;
+            }
+        }
 
-		if (bestAssign==null)
-			throw new IllegalArgumentException("No feasible partition could be found!");
+        if (bestAssign==null)
+            throw new IllegalArgumentException("No feasible partition could be found!");
 
-		//Use coarsemap to find partition
-		for (Map.Entry<Node, SuperNode> entry : coarsemap.entrySet()) {
-			Node node = entry.getKey();
-			int pid = bestAssign.get(entry.getValue().getRepresentationNode());
-			partition.get(pid).add(node);
-		}
+        //Use coarsemap to find partition
+        for (Map.Entry<Node, SuperNode> entry : coarsemap.entrySet()) {
+            Node node = entry.getKey();
+            int pid = bestAssign.get(entry.getValue().getRepresentationNode());
+            partition.get(pid).add(node);
+        }
 
-		return bestEdgeCut;
-	}
+        return bestEdgeCut;
+    }
 
-	private final double partitionEvaluation(double edgeCut, double balance) {
-		if (edgeCut < 5)
-			return 10e30;
-		else
-			return edgeCut+Math.pow(balance,balanceExponent);
-	}
+    private final double partitionEvaluation(double edgeCut, double balance) {
+        if (edgeCut < 5)
+            return 10e30;
+        else
+            return edgeCut+Math.pow(balance,balanceExponent);
+    }
 
-	private static final int findMinPartitionBlock(double[] pweights, List<Map<Node, Double>> neighborhoods) {
-		int index = -1;
-		for (int i=0;i<pweights.length;i++) {
-			if ( (index<0 || pweights[i]<pweights[index]) && neighborhoods.get(i).size()!=0) {
-				index = i;
-			}
-		}
-		return index;
-	}
+    private static final int findMinPartitionBlock(double[] pweights, List<Map<Node, Double>> neighborhoods) {
+        int index = -1;
+        for (int i=0;i<pweights.length;i++) {
+            if ( (index<0 || pweights[i]<pweights[index]) && neighborhoods.get(i).size()!=0) {
+                index = i;
+            }
+        }
+        return index;
+    }
 
-	private static final Node findMostConnected(Map<Node, Double> neighborhood) {
-		Node bestNode = null;
-		double bestValue = Double.NEGATIVE_INFINITY;
-		for (Map.Entry<Node, Double> e : neighborhood.entrySet()) {
-			if (e.getValue()>bestValue) {
-				bestValue = e.getValue();
-				bestNode = e.getKey();
-			}
-		}
-		return bestNode;
-	}
+    private static final Node findMostConnected(Map<Node, Double> neighborhood) {
+        Node bestNode = null;
+        double bestValue = Double.NEGATIVE_INFINITY;
+        for (Map.Entry<Node, Double> e : neighborhood.entrySet()) {
+            if (e.getValue()>bestValue) {
+                bestValue = e.getValue();
+                bestNode = e.getKey();
+            }
+        }
+        return bestNode;
+    }
 
-	private static final double assign(Node n, int pid, double[] pweights, Map<Node,Integer> pAssign,
-			List<Map<Node, Double>> neighborhoods, NodeWeighter nweight, RelationshipWeighter rweight) {
-		pAssign.put(n, pid);
-		pweights[pid]+= nweight.getWeight(n);
+    private static final double assign(Node n, int pid, double[] pweights, Map<Node,Integer> pAssign,
+            List<Map<Node, Double>> neighborhoods, NodeWeighter nweight, RelationshipWeighter rweight) {
+        pAssign.put(n, pid);
+        pweights[pid]+= nweight.getWeight(n);
 
-		double incEdgeCut = 0.0;
-		Map<Node, Double> nghs = neighborhoods.get(pid);
-		//Update neighborhoods and compute edge cut
-		for (Relationship r : n.getRelationships()) {
-			assert r.getRelationshipType().equals(relType);
-			double rw = rweight.getWeight(r);
-			Node other = r.getOtherNode(n);
-			Integer opid = pAssign.get(other);
-			if (opid==null) { //Not yet assigned => add to neighborhood
-				nghs.put(other, (nghs.get(other) != null) ? nghs.get(other) + rw : rw);
-			} else { //Already assigned => remove from its neighborhood, increase edge cut
-				Map<Node, Double> onghs = neighborhoods.get(opid);
-				onghs.remove(n);
-				if (opid!=pid) incEdgeCut += rw;
-			}
-		}
-		//System.out.println(incEdgeCut);
-		return incEdgeCut;
-	}
+        double incEdgeCut = 0.0;
+        Map<Node, Double> nghs = neighborhoods.get(pid);
+        //Update neighborhoods and compute edge cut
+        for (Relationship r : n.getRelationships()) {
+            assert r.getRelationshipType().equals(relType);
+            double rw = rweight.getWeight(r);
+            Node other = r.getOtherNode(n);
+            Integer opid = pAssign.get(other);
+            if (opid==null) { //Not yet assigned => add to neighborhood
+                nghs.put(other, (nghs.get(other) != null) ? nghs.get(other) + rw : rw);
+            } else { //Already assigned => remove from its neighborhood, increase edge cut
+                Map<Node, Double> onghs = neighborhoods.get(opid);
+                onghs.remove(n);
+                if (opid!=pid) incEdgeCut += rw;
+            }
+        }
+        //System.out.println(incEdgeCut);
+        return incEdgeCut;
+    }
 
-	private static final double evaluateNeighbor(Node node, Relationship rel, Node neighbor,
-			NodeWeighter nweight, RelationshipWeighter rweight, Set<Node> visited) {
-		return rweight.getWeight(rel)/Math.pow(nweight.getWeight(neighbor),0.5);
-	}
+    private static final double evaluateNeighbor(Node node, Relationship rel, Node neighbor,
+            NodeWeighter nweight, RelationshipWeighter rweight, Set<Node> visited) {
+        return rweight.getWeight(rel)/Math.pow(nweight.getWeight(neighbor),0.5);
+    }
 
-	private CoarseningResult coarsen(Graph g, Iterable<? extends Node> nodes, NodeWeighter nweight,
-			RelationshipWeighter rweight, int level) {
+    private CoarseningResult coarsen(Graph g, Iterable<? extends Node> nodes, NodeWeighter nweight,
+            RelationshipWeighter rweight, int level) {
 
-		CoarseningResult result = new CoarseningResult();
+        CoarseningResult result = new CoarseningResult();
 
-		result.g = g;
+        result.g = g;
 
-		List<SuperNode> supernodes = new ArrayList<SuperNode>();
+        List<SuperNode> supernodes = new ArrayList<SuperNode>();
 
-		for (Node node : nodes) {
-			if (result.map.containsKey(node)) continue;
-			result.noBaseNodes++;
-			Set<Node> visited = new HashSet<Node>();
-			double highscore = Double.NEGATIVE_INFINITY;
-			Node bestngh = null;
-			for (Relationship r : node.getRelationships()) {
-				Node ngh = r.getOtherNode(node);
-				if (!visited.contains(ngh)) {
-					double score = evaluateNeighbor(node,r,ngh,nweight,rweight,visited);
-					if (score>highscore) {
-						bestngh = ngh;
-						highscore = score;
-					}
-				}
-			}
-			if (bestngh!=null) {
-				SuperNode nsup = result.map.get(bestngh);
-				if (nsup == null) {
-					nsup = new SuperNode(result.g.createNode());
-					result.addSuperNode(nsup);
-					nsup.addChild(bestngh, nweight.getWeight(bestngh));
-					result.map.put(bestngh, nsup);
-					supernodes.add(nsup);
-				}
-				nsup.addChild(node, nweight.getWeight(node));
-				result.map.put(node, nsup);
-			} else { //Create singleton node
-				SuperNode sup = new SuperNode(result.g.createNode());
-				result.addSuperNode(sup);
-				sup.addChild(node, nweight.getWeight(node));
-				result.map.put(node, sup);
-				supernodes.add(sup);
+        for (Node node : nodes) {
+            if (result.map.containsKey(node)) continue;
+            result.noBaseNodes++;
+            Set<Node> visited = new HashSet<Node>();
+            double highscore = Double.NEGATIVE_INFINITY;
+            Node bestngh = null;
+            for (Relationship r : node.getRelationships()) {
+                Node ngh = r.getOtherNode(node);
+                if (!visited.contains(ngh)) {
+                    double score = evaluateNeighbor(node,r,ngh,nweight,rweight,visited);
+                    if (score>highscore) {
+                        bestngh = ngh;
+                        highscore = score;
+                    }
+                }
+            }
+            if (bestngh!=null) {
+                SuperNode nsup = result.map.get(bestngh);
+                if (nsup == null) {
+                    nsup = new SuperNode(result.g.createNode());
+                    result.addSuperNode(nsup);
+                    nsup.addChild(bestngh, nweight.getWeight(bestngh));
+                    result.map.put(bestngh, nsup);
+                    supernodes.add(nsup);
+                }
+                nsup.addChild(node, nweight.getWeight(node));
+                result.map.put(node, nsup);
+            } else { //Create singleton node
+                SuperNode sup = new SuperNode(result.g.createNode());
+                result.addSuperNode(sup);
+                sup.addChild(node, nweight.getWeight(node));
+                result.map.put(node, sup);
+                supernodes.add(sup);
 
-			}
+            }
 
-		}
+        }
 
-		/* Constructs new graph for coarsening */
-		result.rweight = createCoarseGraph(result.g, supernodes, result.map, rweight);
-		result.nweight = new PropertyNodeWeighter(weightType);
+        /* Constructs new graph for coarsening */
+        result.rweight = createCoarseGraph(result.g, supernodes, result.map, rweight);
+        result.nweight = new PropertyNodeWeighter(weightType);
 
-		return result;
-	}
+        return result;
+    }
 
-	protected static HashRelationshipWeighter createCoarseGraph(Graph g,
-			Iterable<SuperNode> supernodes, Map<Node,SuperNode> assign,
-			RelationshipWeighter rweight) {
+    protected static HashRelationshipWeighter createCoarseGraph(Graph g,
+            Iterable<SuperNode> supernodes, Map<Node,SuperNode> assign,
+            RelationshipWeighter rweight) {
 
-		g.createRelationshipType(relType);
-		g.createPropertyType(weightType, Double.class);
-		HashRelationshipWeighter relWeighter = new HashRelationshipWeighter();
+        g.createRelationshipType(relType);
+        g.createPropertyType(weightType, Double.class);
+        HashRelationshipWeighter relWeighter = new HashRelationshipWeighter();
 
 
-		for (SuperNode snode : supernodes) {
-			Map<Node, Double> acc = new HashMap<Node, Double>();
-			for (int ch=0;ch<snode.getNoChildren();ch++) {
-				Node child = snode.getChild(ch);
-				for (Relationship r : child.getRelationships()) {
-					SuperNode other = assign.get(r.getOtherNode(child));
-					if (snode.compareTo(other)>0) {
-						acc.put(other.getRepresentationNode(),
-								(acc.get(other.getRepresentationNode()) != null)
-									? acc.get(other.getRepresentationNode()) + rweight.getWeight(r)
-									: rweight.getWeight(r)
-						);
-					}
-				}
-			}
-			Node center = snode.getRepresentationNode();
-			center.createProperty(weightType, snode.getWeight());
-			for (Map.Entry<Node, Double> e : acc.entrySet()) {
-				Relationship rel = center.createRelationship(relType, e.getKey());
-				relWeighter.setWeight(rel, e.getValue());
-			}
-		}
-		return relWeighter;
-	}
+        for (SuperNode snode : supernodes) {
+            Map<Node, Double> acc = new HashMap<Node, Double>();
+            for (int ch=0;ch<snode.getNoChildren();ch++) {
+                Node child = snode.getChild(ch);
+                for (Relationship r : child.getRelationships()) {
+                    SuperNode other = assign.get(r.getOtherNode(child));
+                    if (snode.compareTo(other)>0) {
+                        acc.put(other.getRepresentationNode(),
+                                (acc.get(other.getRepresentationNode()) != null)
+                                    ? acc.get(other.getRepresentationNode()) + rweight.getWeight(r)
+                                    : rweight.getWeight(r)
+                        );
+                    }
+                }
+            }
+            Node center = snode.getRepresentationNode();
+            center.createProperty(weightType, snode.getWeight());
+            for (Map.Entry<Node, Double> e : acc.entrySet()) {
+                Relationship rel = center.createRelationship(relType, e.getKey());
+                relWeighter.setWeight(rel, e.getValue());
+            }
+        }
+        return relWeighter;
+    }
 
-	private double stdDev(double[] values) {
-		double sum = 0.0;
-		double sumOfSquares = 0.0;
-		for (int i = 0; i < values.length; i++) {
-			sum += values[i];
-			sumOfSquares += Math.pow(values[i], 2);
-		}
-		return Math.sqrt((sumOfSquares - Math.pow(sum, 2) / values.length) / values.length);
-	}
+    private double stdDev(double[] values) {
+        double sum = 0.0;
+        double sumOfSquares = 0.0;
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+            sumOfSquares += Math.pow(values[i], 2);
+        }
+        return Math.sqrt((sumOfSquares - Math.pow(sum, 2) / values.length) / values.length);
+    }
 
-	private class ConstantOneNodeWeighter implements NodeWeighter {
-		@Override
-		public double getWeight(Node n) {
-			return 1;
-		}
-	}
+    private class ConstantOneNodeWeighter implements NodeWeighter {
+        @Override
+        public double getWeight(Node n) {
+            return 1;
+        }
+    }
 }

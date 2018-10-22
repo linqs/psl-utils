@@ -18,11 +18,11 @@
 package org.linqs.psl.utils.graph;
 
 public interface Relationship extends Edge {
-	 public Node getEnd();
+     public Node getEnd();
 
-	 public Node getOtherNode(Node n);
+     public Node getOtherNode(Node n);
 
-	 public boolean isSelfLoop(Node node);
-	 
-	 public String getRelationshipType();
+     public boolean isSelfLoop(Node node);
+
+     public String getRelationshipType();
 }

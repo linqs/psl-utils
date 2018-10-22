@@ -19,12 +19,12 @@ package org.linqs.psl.utils.dataloading.graph;
 
 public interface RelationType {
 
-	public boolean isSoft();
-	
-	public boolean isSymmetric();
-	
-	public int arity();
-	
-	public boolean hasAttributes();
-	
+    public boolean isSoft();
+
+    public boolean isSymmetric();
+
+    public int arity();
+
+    public boolean hasAttributes();
+
 }

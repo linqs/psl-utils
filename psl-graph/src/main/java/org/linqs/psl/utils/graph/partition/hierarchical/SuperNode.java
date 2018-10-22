@@ -23,66 +23,66 @@ import org.linqs.psl.utils.graph.Node;
 
 public class SuperNode implements Comparable<SuperNode> {
 
-	private static final int initialChildrenSize = 4;
-	private static AtomicInteger idCounter = new AtomicInteger(0);
-	
-	private final int id;
-	private final Node supernode;
-	private double weight;
-	private int noChildren;
-	
-	private Node[] children;
-	
-	SuperNode(Node supern) {
-		supernode = supern;
-		id = idCounter.incrementAndGet();
-		weight = 0.0;
-		noChildren=0;
-		children = new Node[initialChildrenSize];
-	}
-	
-	@Override
-	public int hashCode() {
-		return id*47 + 111;
-	}
-	
-	@Override
-	public boolean equals(Object oth) {
-		if (this==oth) return true;
-		else if (!getClass().isInstance(oth)) return false;
-		return id==((SuperNode)oth).id;
-	}
-	
-	Node getRepresentationNode() {
-		return supernode;
-	}
-	
-	double getWeight() {
-		return weight;
-	}
-	
-	int getNoChildren() {
-		return noChildren;
-	}
-	
-	void addChild(Node n, double w) {
-		weight+=w;
-		if (noChildren==children.length) { //Expand
-			Node[] newchildren = new Node[children.length*2];
-			System.arraycopy(children, 0, newchildren, 0, noChildren);
-			children=newchildren;
-		}
-		children[noChildren]=n;
-		noChildren++;
-	}
-	
-	Node getChild(int pos) {
-		if (pos<0 || pos>=noChildren) throw new ArrayIndexOutOfBoundsException("Out of bounds: " + pos);
-		return children[pos];
-	}
+    private static final int initialChildrenSize = 4;
+    private static AtomicInteger idCounter = new AtomicInteger(0);
 
-	@Override
-	public int compareTo(SuperNode o) {
-		return id-o.id;
-	}
+    private final int id;
+    private final Node supernode;
+    private double weight;
+    private int noChildren;
+
+    private Node[] children;
+
+    SuperNode(Node supern) {
+        supernode = supern;
+        id = idCounter.incrementAndGet();
+        weight = 0.0;
+        noChildren=0;
+        children = new Node[initialChildrenSize];
+    }
+
+    @Override
+    public int hashCode() {
+        return id*47 + 111;
+    }
+
+    @Override
+    public boolean equals(Object oth) {
+        if (this==oth) return true;
+        else if (!getClass().isInstance(oth)) return false;
+        return id==((SuperNode)oth).id;
+    }
+
+    Node getRepresentationNode() {
+        return supernode;
+    }
+
+    double getWeight() {
+        return weight;
+    }
+
+    int getNoChildren() {
+        return noChildren;
+    }
+
+    void addChild(Node n, double w) {
+        weight+=w;
+        if (noChildren==children.length) { //Expand
+            Node[] newchildren = new Node[children.length*2];
+            System.arraycopy(children, 0, newchildren, 0, noChildren);
+            children=newchildren;
+        }
+        children[noChildren]=n;
+        noChildren++;
+    }
+
+    Node getChild(int pos) {
+        if (pos<0 || pos>=noChildren) throw new ArrayIndexOutOfBoundsException("Out of bounds: " + pos);
+        return children[pos];
+    }
+
+    @Override
+    public int compareTo(SuperNode o) {
+        return id-o.id;
+    }
 }

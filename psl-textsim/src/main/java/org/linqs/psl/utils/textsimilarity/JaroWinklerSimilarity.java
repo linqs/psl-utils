@@ -31,40 +31,40 @@ import com.wcohen.ss.JaroWinkler;
  * If the similarity is below a threshold (default=0.5) it returns 0.
  */
 public class JaroWinklerSimilarity implements ExternalFunction {
-	// similarity threshold (default=0.5)
-	private double simThresh;
+    // similarity threshold (default=0.5)
+    private double simThresh;
 
-	// constructors
-	public JaroWinklerSimilarity() {
-		this.simThresh = 0.5;
-	}
-	public JaroWinklerSimilarity(double simThresh) {
-		this.simThresh = simThresh;
-	}
+    // constructors
+    public JaroWinklerSimilarity() {
+        this.simThresh = 0.5;
+    }
+    public JaroWinklerSimilarity(double simThresh) {
+        this.simThresh = simThresh;
+    }
 
-	@Override
-	public int getArity() {
-		return 2;
-	}
+    @Override
+    public int getArity() {
+        return 2;
+    }
 
-	@Override
-	public ConstantType[] getArgumentTypes() {
-		return new ConstantType[] { ConstantType.String, ConstantType.String };
-	}
+    @Override
+    public ConstantType[] getArgumentTypes() {
+        return new ConstantType[] { ConstantType.String, ConstantType.String };
+    }
 
-	@Override
-	public double getValue(ReadableDatabase db, Constant... args) {
-		String a = ((StringAttribute) args[0]).getValue();
-		String b = ((StringAttribute) args[1]).getValue();
-		BasicStringWrapper aWrapped = new BasicStringWrapper(a);
-		BasicStringWrapper bWrapped = new BasicStringWrapper(b);
+    @Override
+    public double getValue(ReadableDatabase db, Constant... args) {
+        String a = ((StringAttribute) args[0]).getValue();
+        String b = ((StringAttribute) args[1]).getValue();
+        BasicStringWrapper aWrapped = new BasicStringWrapper(a);
+        BasicStringWrapper bWrapped = new BasicStringWrapper(b);
 
-		JaroWinkler jaroW = new JaroWinkler();
-		double sim = jaroW.score(aWrapped, bWrapped);
+        JaroWinkler jaroW = new JaroWinkler();
+        double sim = jaroW.score(aWrapped, bWrapped);
 
-		if (sim < simThresh)
-			return 0.0;
-		else
-			return sim;
-	 }
+        if (sim < simThresh)
+            return 0.0;
+        else
+            return sim;
+     }
 }

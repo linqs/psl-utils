@@ -32,40 +32,40 @@ import com.wcohen.ss.Level2MongeElkan;
  * If the similarity is below a threshold (default=0.5) it returns 0.
  */
 public class Level2MongeElkanSimilarity implements ExternalFunction {
-	// similarity threshold (default=0.5)
-	private double simThresh;
+    // similarity threshold (default=0.5)
+    private double simThresh;
 
-	// constructors
-	public Level2MongeElkanSimilarity() {
-		this.simThresh = 0.5;
-	}
-	public Level2MongeElkanSimilarity(double simThresh) {
-		this.simThresh = simThresh;
-	}
+    // constructors
+    public Level2MongeElkanSimilarity() {
+        this.simThresh = 0.5;
+    }
+    public Level2MongeElkanSimilarity(double simThresh) {
+        this.simThresh = simThresh;
+    }
 
-	@Override
-	public int getArity() {
-		return 2;
-	}
+    @Override
+    public int getArity() {
+        return 2;
+    }
 
-	@Override
-	public ConstantType[] getArgumentTypes() {
-		return new ConstantType[] { ConstantType.String, ConstantType.String };
-	}
+    @Override
+    public ConstantType[] getArgumentTypes() {
+        return new ConstantType[] { ConstantType.String, ConstantType.String };
+    }
 
-	@Override
-	public double getValue(ReadableDatabase db, Constant... args) {
-		String a = ((StringAttribute) args[0]).getValue();
-		String b = ((StringAttribute) args[1]).getValue();
-		BasicStringWrapper aWrapped = new BasicStringWrapper(a);
-		BasicStringWrapper bWrapped = new BasicStringWrapper(b);
+    @Override
+    public double getValue(ReadableDatabase db, Constant... args) {
+        String a = ((StringAttribute) args[0]).getValue();
+        String b = ((StringAttribute) args[1]).getValue();
+        BasicStringWrapper aWrapped = new BasicStringWrapper(a);
+        BasicStringWrapper bWrapped = new BasicStringWrapper(b);
 
-		Level2MongeElkan mongeElkan = new Level2MongeElkan();
-		double sim = mongeElkan.score(aWrapped, bWrapped);
+        Level2MongeElkan mongeElkan = new Level2MongeElkan();
+        double sim = mongeElkan.score(aWrapped, bWrapped);
 
-		if (sim < simThresh)
-			return 0.0;
-		else
-			return sim;
-	 }
+        if (sim < simThresh)
+            return 0.0;
+        else
+            return sim;
+     }
 }

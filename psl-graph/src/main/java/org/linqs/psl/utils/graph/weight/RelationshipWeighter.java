@@ -20,5 +20,5 @@ package org.linqs.psl.utils.graph.weight;
 import org.linqs.psl.utils.graph.Relationship;
 
 public interface RelationshipWeighter {
-	public double getWeight(Relationship r);
+    public double getWeight(Relationship r);
 }

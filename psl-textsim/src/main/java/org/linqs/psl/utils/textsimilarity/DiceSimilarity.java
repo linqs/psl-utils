@@ -35,81 +35,81 @@ import org.linqs.psl.model.term.StringAttribute;
  *     - The tokenizer could probably be improved.
  */
 public class DiceSimilarity implements ExternalFunction {
-	// similarity threshold (default=0.5)
-	private double simThresh;
+    // similarity threshold (default=0.5)
+    private double simThresh;
 
-	// constructors
-	public DiceSimilarity() {
-		this.simThresh = 0.5;
-	}
+    // constructors
+    public DiceSimilarity() {
+        this.simThresh = 0.5;
+    }
 
-	public DiceSimilarity(double simThresh) {
-		this.simThresh = simThresh;
-	}
+    public DiceSimilarity(double simThresh) {
+        this.simThresh = simThresh;
+    }
 
-	@Override
-	public int getArity() {
-		return 2;
-	}
+    @Override
+    public int getArity() {
+        return 2;
+    }
 
-	@Override
-	public ConstantType[] getArgumentTypes() {
-		return new ConstantType[] { ConstantType.String, ConstantType.String };
-	}
+    @Override
+    public ConstantType[] getArgumentTypes() {
+        return new ConstantType[] { ConstantType.String, ConstantType.String };
+    }
 
-	@Override
-	public double getValue(ReadableDatabase db, Constant... args) {
-		String a = ((StringAttribute) args[0]).getValue();
-		String b = ((StringAttribute) args[1]).getValue();
+    @Override
+    public double getValue(ReadableDatabase db, Constant... args) {
+        String a = ((StringAttribute) args[0]).getValue();
+        String b = ((StringAttribute) args[1]).getValue();
 
-		// Create two sets of character bigrams, one for each string.
-		Set<String> s1 = splitIntoBigrams(a);
-		Set<String> s2 = splitIntoBigrams(b);
+        // Create two sets of character bigrams, one for each string.
+        Set<String> s1 = splitIntoBigrams(a);
+        Set<String> s2 = splitIntoBigrams(b);
 
-		// Get the number of elements in each set.
-		int n1 = s1.size();
-		int n2 = s2.size();
+        // Get the number of elements in each set.
+        int n1 = s1.size();
+        int n2 = s2.size();
 
-		// Find the intersection, and get the number of elements in that set.
-		s1.retainAll(s2);
-		int nt = s1.size();
+        // Find the intersection, and get the number of elements in that set.
+        s1.retainAll(s2);
+        int nt = s1.size();
 
-		// The coefficient is:
-		//
-		//        2 ∙ | s1 ⋂ s2 |
-		// D = ----------------------
-		//        | s1 | + | s2 |
-		//
-		double sim = (2.0 * (double)nt) / ((double)(n1 + n2));
+        // The coefficient is:
+        //
+        //        2 ∙ | s1 ⋂ s2 |
+        // D = ----------------------
+        //        | s1 | + | s2 |
+        //
+        double sim = (2.0 * (double)nt) / ((double)(n1 + n2));
 
-		if (sim < simThresh) {
-			return 0.0;
-		}
+        if (sim < simThresh) {
+            return 0.0;
+        }
 
-		return sim;
-	}
+        return sim;
+    }
 
-	private static Set<String> splitIntoBigrams(String text) {
-		// Cleanup whitespace.
-		text = text.replaceAll("\\s+", " ").trim();
+    private static Set<String> splitIntoBigrams(String text) {
+        // Cleanup whitespace.
+        text = text.replaceAll("\\s+", " ").trim();
 
-		// tokenize the input
-		String[] tokens = text.split(" ");
+        // tokenize the input
+        String[] tokens = text.split(" ");
 
-		// create bigrams from tokens
-		ArrayList<String> bigrams = new ArrayList<String>();
-		if (tokens.length == 1) {
-			bigrams.add(tokens[0]);
-		} else {
-			for (int i = 1; i < tokens.length; i++) {
-				StringBuilder sb = new StringBuilder();
-				sb.append(tokens[i - 1]);
-				sb.append(",");
-				sb.append(tokens[i]);
-				bigrams.add(sb.toString());
-			}
-		}
+        // create bigrams from tokens
+        ArrayList<String> bigrams = new ArrayList<String>();
+        if (tokens.length == 1) {
+            bigrams.add(tokens[0]);
+        } else {
+            for (int i = 1; i < tokens.length; i++) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(tokens[i - 1]);
+                sb.append(",");
+                sb.append(tokens[i]);
+                bigrams.add(sb.toString());
+            }
+        }
 
-		return new TreeSet<String>(bigrams);
-	}
+        return new TreeSet<String>(bigrams);
+    }
 }

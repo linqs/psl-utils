@@ -19,44 +19,44 @@ package org.linqs.psl.utils.dataloading.graph;
 
 public abstract class Relation<ET extends EntityType, RT extends RelationType> extends HasAttributes{
 
-	protected final RT type;
-	
-	
-	public Relation(RT _type) {
-		super(_type.hasAttributes());
-		type = _type;
-	}
-
-	public RT getType() {
-		return type;
-	}
-		
-	public boolean isSoft() {
-		return type.isSoft();
-	}
+    protected final RT type;
 
 
-	
-	public abstract Entity<ET,RT> get(int pos);
-	
-	public abstract int getArity();
-	
-	@Override
-	public int hashCode() {
-		return type.hashCode()*119;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean equals(Object oth) {
-		if (this==oth) return true;
-		if (oth==null || !getClass().isInstance(oth)) return false;
-		Relation<ET,RT> r = (Relation<ET,RT>)oth;
-		return type.equals(r.type);
-	}
+    public Relation(RT _type) {
+        super(_type.hasAttributes());
+        type = _type;
+    }
 
-	public boolean hasType(RT reltype) {
-		return type.equals(reltype);
-	}
-	
+    public RT getType() {
+        return type;
+    }
+
+    public boolean isSoft() {
+        return type.isSoft();
+    }
+
+
+
+    public abstract Entity<ET,RT> get(int pos);
+
+    public abstract int getArity();
+
+    @Override
+    public int hashCode() {
+        return type.hashCode()*119;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean equals(Object oth) {
+        if (this==oth) return true;
+        if (oth==null || !getClass().isInstance(oth)) return false;
+        Relation<ET,RT> r = (Relation<ET,RT>)oth;
+        return type.equals(r.type);
+    }
+
+    public boolean hasType(RT reltype) {
+        return type.equals(reltype);
+    }
+
 }

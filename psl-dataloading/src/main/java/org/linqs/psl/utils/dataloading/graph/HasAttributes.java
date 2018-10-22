@@ -22,27 +22,27 @@ import java.util.Map;
 
 public abstract class HasAttributes {
 
-	private final Map<String,Object> attributes;
-	
-	public HasAttributes(boolean hasAttributes) {
-		if (hasAttributes) attributes = new HashMap<String,Object>();
-		else attributes = null;
-	}
+    private final Map<String,Object> attributes;
 
-	public void setAttribute(String attname, Object att) {
-		if (attributes.containsKey(attname)) throw new AssertionError("Attribute has already been set!");
-		else attributes.put(attname, att);
-	}
-	
-	public<O> O getAttribute(String attname, Class<O> clazz) {
-		return clazz.cast(getAttribute(attname));
-	}
-	
-	public Object getAttribute(String attname) {
-		Object obj = attributes.get(attname);
-		if (obj==null) throw new AssertionError("Attribute has not been set!");
-		return obj;
-	}
+    public HasAttributes(boolean hasAttributes) {
+        if (hasAttributes) attributes = new HashMap<String,Object>();
+        else attributes = null;
+    }
 
-	
+    public void setAttribute(String attname, Object att) {
+        if (attributes.containsKey(attname)) throw new AssertionError("Attribute has already been set!");
+        else attributes.put(attname, att);
+    }
+
+    public<O> O getAttribute(String attname, Class<O> clazz) {
+        return clazz.cast(getAttribute(attname));
+    }
+
+    public Object getAttribute(String attname) {
+        Object obj = attributes.get(attname);
+        if (obj==null) throw new AssertionError("Attribute has not been set!");
+        return obj;
+    }
+
+
 }

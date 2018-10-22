@@ -18,9 +18,9 @@
 package org.linqs.psl.utils.graph;
 
 public interface Property extends Edge {
-	 public Object getAttribute();
+     public Object getAttribute();
 
-	 public <O> O getAttribute(Class<O> clazz);
+     public <O> O getAttribute(Class<O> clazz);
 
-	 public String getPropertyType();
+     public String getPropertyType();
 }

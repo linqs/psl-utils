@@ -28,24 +28,24 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class CosineSimilarityTest extends TextSimTest {
-	/* TODO(eriq): Our cosine similarity is crazy: https://github.com/linqs/psl-utils/issues/7
-	@Test
-	public void testBase() {
-		ExternalFunction fun = new CosineSimilarity();
+    /* TODO(eriq): Our cosine similarity is crazy: https://github.com/linqs/psl-utils/issues/7
+    @Test
+    public void testBase() {
+        ExternalFunction fun = new CosineSimilarity();
 
-		String[] a = new String[]{
-			"A B C"
-		};
+        String[] a = new String[]{
+            "A B C"
+        };
 
-		String[] b = new String[]{
-			"A B C"
-		};
+        String[] b = new String[]{
+            "A B C"
+        };
 
-		double[] expected = new double[]{
-			1.0
-		};
+        double[] expected = new double[]{
+            1.0
+        };
 
-		directTest(fun, a, b, expected);
-	}
-	*/
+        directTest(fun, a, b, expected);
+    }
+    */
 }

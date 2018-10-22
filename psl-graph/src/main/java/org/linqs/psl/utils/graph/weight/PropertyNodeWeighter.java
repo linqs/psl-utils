@@ -20,20 +20,20 @@ package org.linqs.psl.utils.graph.weight;
 import org.linqs.psl.utils.graph.Node;
 
 public class PropertyNodeWeighter implements NodeWeighter {
-	
-	private String type;
-	
-	public PropertyNodeWeighter(String propertyType) {
-		type = propertyType;
-	}
 
-	@Override
-	public double getWeight(Node n) {
-		Double weight = n.getAttribute(type, Double.class);
-		if (weight != null)
-			return weight;
-		else
-			return Double.POSITIVE_INFINITY;
-	}
+    private String type;
+
+    public PropertyNodeWeighter(String propertyType) {
+        type = propertyType;
+    }
+
+    @Override
+    public double getWeight(Node n) {
+        Double weight = n.getAttribute(type, Double.class);
+        if (weight != null)
+            return weight;
+        else
+            return Double.POSITIVE_INFINITY;
+    }
 
 }

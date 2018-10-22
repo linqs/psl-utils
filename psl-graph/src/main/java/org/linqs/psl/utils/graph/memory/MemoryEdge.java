@@ -22,17 +22,17 @@ import org.linqs.psl.utils.graph.Node;
 
 abstract public class MemoryEdge extends MemoryNode implements Edge {
 
-	final MemoryNode startNode;
-	
-	MemoryEdge(MemoryGraph g, MemoryNode start) {
-		super(g);
-		startNode = start;
-	}
+    final MemoryNode startNode;
 
-	@Override
-	public Node getStart() {
-		if (startNode == null)
-			throw new IllegalStateException();
-		return startNode;
-	}
+    MemoryEdge(MemoryGraph g, MemoryNode start) {
+        super(g);
+        startNode = start;
+    }
+
+    @Override
+    public Node getStart() {
+        if (startNode == null)
+            throw new IllegalStateException();
+        return startNode;
+    }
 }

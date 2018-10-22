@@ -20,14 +20,14 @@ package org.linqs.psl.utils.graph;
 import java.util.Collection;
 
 public interface Edge extends Node {
-	public Collection<? extends Node> getNodes();
+    public Collection<? extends Node> getNodes();
 
-	public Node getStart();
+    public Node getStart();
 
-	public boolean isIncidentOn(Node n);
+    public boolean isIncidentOn(Node n);
 
-	public boolean isProperty();
+    public boolean isProperty();
 
-	public boolean isRelationship();
+    public boolean isRelationship();
 
 }

@@ -20,57 +20,57 @@ package org.linqs.psl.utils.dataloading.graph;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class BinaryRelation<ET extends EntityType, RT extends RelationType> extends Relation<ET,RT> {
-	
-	private final Entity<ET,RT> first;
-	private final Entity<ET,RT> second;
-	
-	
-	public BinaryRelation(RT type, Entity<ET,RT> _first, Entity<ET,RT> _second) {
-		super(type);
-		if (type.arity()!=2) throw new AssertionError("Expected binary relation type!");
-		first = _first;
-		second = _second;
-	}
+
+    private final Entity<ET,RT> first;
+    private final Entity<ET,RT> second;
 
 
-	public Entity<ET,RT> getFirst() {
-		return first;
-	}
+    public BinaryRelation(RT type, Entity<ET,RT> _first, Entity<ET,RT> _second) {
+        super(type);
+        if (type.arity()!=2) throw new AssertionError("Expected binary relation type!");
+        first = _first;
+        second = _second;
+    }
 
 
-	public Entity<ET,RT> getSecond() {
-		return second;
-	}
-	
-	@Override
-	public int getArity() {
-		return 2;
-	}
-	
-	@Override
-	public Entity<ET, RT> get(int pos) {
-		switch(pos) {
-		case 0: return first;
-		case 1: return second;
-		default: throw new ArrayIndexOutOfBoundsException();
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().appendSuper(super.hashCode()).append(first.hashCode() + second.hashCode()).toHashCode();
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean equals(Object oth) {
-		if (!super.equals(oth)) return false;
-		BinaryRelation<ET,RT> r = (BinaryRelation<ET,RT>)oth;
-		return (first.equals(r.first) && second.equals(r.second)) ||
-				(first.equals(r.second) && second.equals(r.first));
-	}
+    public Entity<ET,RT> getFirst() {
+        return first;
+    }
 
 
+    public Entity<ET,RT> getSecond() {
+        return second;
+    }
 
-	
+    @Override
+    public int getArity() {
+        return 2;
+    }
+
+    @Override
+    public Entity<ET, RT> get(int pos) {
+        switch(pos) {
+        case 0: return first;
+        case 1: return second;
+        default: throw new ArrayIndexOutOfBoundsException();
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().appendSuper(super.hashCode()).append(first.hashCode() + second.hashCode()).toHashCode();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean equals(Object oth) {
+        if (!super.equals(oth)) return false;
+        BinaryRelation<ET,RT> r = (BinaryRelation<ET,RT>)oth;
+        return (first.equals(r.first) && second.equals(r.second)) ||
+                (first.equals(r.second) && second.equals(r.first));
+    }
+
+
+
+
 }

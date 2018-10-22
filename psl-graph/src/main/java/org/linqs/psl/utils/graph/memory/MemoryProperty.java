@@ -26,68 +26,68 @@ import org.linqs.psl.utils.graph.Property;
 import org.linqs.psl.utils.graph.Relationship;
 
 public class MemoryProperty extends MemoryEdge implements Property {
-	
-	final private Object attribute;
-	final private Integer propertyType;
 
-	MemoryProperty(MemoryGraph g, Integer pt, MemoryNode n, Object a) {
-		super(g, n);
-		attribute = a;
-		propertyType = pt;
-	}
-	
-	@Override
-	public Property createProperty(String type, Object attribute) {	
-		throw new UnsupportedOperationException("Properties cannot have properties.");
-	}
+    final private Object attribute;
+    final private Integer propertyType;
 
-	@Override
-	public Relationship createRelationship(String type, Node n) {
-		throw new UnsupportedOperationException("Properties cannot participate in relationships.");
-	}
+    MemoryProperty(MemoryGraph g, Integer pt, MemoryNode n, Object a) {
+        super(g, n);
+        attribute = a;
+        propertyType = pt;
+    }
 
-	@Override
-	public boolean isProperty() {
-		return true;
-	}
+    @Override
+    public Property createProperty(String type, Object attribute) {
+        throw new UnsupportedOperationException("Properties cannot have properties.");
+    }
 
-	@Override
-	public boolean isRelationship() {
-		return false;
-	}
+    @Override
+    public Relationship createRelationship(String type, Node n) {
+        throw new UnsupportedOperationException("Properties cannot participate in relationships.");
+    }
 
-	@Override
-	public Object getAttribute() {
-		return attribute;
-	}
+    @Override
+    public boolean isProperty() {
+        return true;
+    }
 
-	@Override
-	public <O> O getAttribute(Class<O> clazz) {
-		return clazz.cast(attribute);
-	}
+    @Override
+    public boolean isRelationship() {
+        return false;
+    }
 
-	@Override
-	public String getPropertyType() {
-		return graph.getPropertyTypeName(propertyType);
-	}
+    @Override
+    public Object getAttribute() {
+        return attribute;
+    }
 
-	@Override
-	public Collection<? extends Node> getNodes() {
-		List<MemoryNode> nodes = new ArrayList<MemoryNode>(1);
-		nodes.add(startNode);
-		return nodes;
-	}
+    @Override
+    public <O> O getAttribute(Class<O> clazz) {
+        return clazz.cast(attribute);
+    }
 
-	@Override
-	public boolean isIncidentOn(Node n) {
-		return startNode.equals(n);
-	}
-	
-	@Override
-	public void delete() {
-		graph.notifyPropertyDeleted(startNode, this);
-		startNode.notifyPropertyDeleted(this);
-		super.delete();
-	}
+    @Override
+    public String getPropertyType() {
+        return graph.getPropertyTypeName(propertyType);
+    }
+
+    @Override
+    public Collection<? extends Node> getNodes() {
+        List<MemoryNode> nodes = new ArrayList<MemoryNode>(1);
+        nodes.add(startNode);
+        return nodes;
+    }
+
+    @Override
+    public boolean isIncidentOn(Node n) {
+        return startNode.equals(n);
+    }
+
+    @Override
+    public void delete() {
+        graph.notifyPropertyDeleted(startNode, this);
+        startNode.notifyPropertyDeleted(this);
+        super.delete();
+    }
 
 }

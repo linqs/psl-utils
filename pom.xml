@@ -44,7 +44,6 @@
 
 	<modules>
 		<module>psl-dataloading</module>
-		<module>psl-evaluation-extended</module>
 		<module>psl-graph</module>
 		<module>psl-textsim</module>
 	</modules>

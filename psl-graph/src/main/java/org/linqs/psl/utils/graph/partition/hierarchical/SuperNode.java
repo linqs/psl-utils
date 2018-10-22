@@ -21,11 +21,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.linqs.psl.utils.graph.Node;
 
-class SuperNode implements Comparable<SuperNode> {
+public class SuperNode implements Comparable<SuperNode> {
 
 	private static final int initialChildrenSize = 4;
 	private static AtomicInteger idCounter = new AtomicInteger(0);
-	
 	
 	private final int id;
 	private final Node supernode;
@@ -41,10 +40,6 @@ class SuperNode implements Comparable<SuperNode> {
 		noChildren=0;
 		children = new Node[initialChildrenSize];
 	}
-	
-//	void setSuperNode(Node n) {
-//		supernode = n;
-//	}
 	
 	@Override
 	public int hashCode() {
@@ -90,5 +85,4 @@ class SuperNode implements Comparable<SuperNode> {
 	public int compareTo(SuperNode o) {
 		return id-o.id;
 	}
-	
 }

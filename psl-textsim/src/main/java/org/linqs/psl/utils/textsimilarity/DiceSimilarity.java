@@ -30,9 +30,9 @@ import org.linqs.psl.model.term.StringAttribute;
 /**
  * Implements the dice similarity measure (quick-n-dirty version) for bigrams.
  * Notes:
- *	- This is not the true dice similarity (it uses only uses bigrams).
- * 	- A better implementation might not use strings for bigrams.
- *	- The tokenizer could probably be improved.
+ *     - This is not the true dice similarity (it uses only uses bigrams).
+ *     - A better implementation might not use strings for bigrams.
+ *     - The tokenizer could probably be improved.
  */
 public class DiceSimilarity implements ExternalFunction {
 	// similarity threshold (default=0.5)
@@ -76,9 +76,9 @@ public class DiceSimilarity implements ExternalFunction {
 
 		// The coefficient is:
 		//
-		//		  2 ∙ | s1 ⋂ s2 |
+		//        2 ∙ | s1 ⋂ s2 |
 		// D = ----------------------
-		//		  | s1 | + | s2 |
+		//        | s1 | + | s2 |
 		//
 		double sim = (2.0 * (double)nt) / ((double)(n1 + n2));
 

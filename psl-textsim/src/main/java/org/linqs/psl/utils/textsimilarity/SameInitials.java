@@ -62,11 +62,11 @@ public class SameInitials implements ExternalFunction {
 		return 1.0;
 	 }
 
-	 static void updateHistogram(char initial, int[] histogram) {
-	 	int code = (int) initial - 97;
-	 	if (code < 0 || code > 25)
-	 		code = 26;
+	static void updateHistogram(char initial, int[] histogram) {
+		int code = (int) initial - 97;
+		if (code < 0 || code > 25)
+			code = 26;
 
-	 	histogram[code]++;
+		histogram[code]++;
 	 }
 }

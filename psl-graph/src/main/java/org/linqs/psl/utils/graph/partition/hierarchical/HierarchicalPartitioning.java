@@ -44,22 +44,22 @@ public class HierarchicalPartitioning implements Partitioner {
 
 	private static final Logger log =
 		LoggerFactory.getLogger(HierarchicalPartitioning.class);
-	
+
 	protected static final String relType = "connect";
 	protected static final String weightType = "weight";
-	
+
 	private static final double shrinkingThreshold = 0.7;
 	private static final int finalMultiple = 8;
 	private static final int initialMultiple = 400;
-	
+
 	private static final int defaultNoTrials = 10;
 	private static final int defaultNoPartitions = 2;
 	private static final double defaultBalanceExponent = 1.5;
-	
+
 	private double balanceExponent;
 	private int noTrials;
 	private int noPartitions;
-	
+
 	public HierarchicalPartitioning(int size) {
 		noPartitions=size;
 		noTrials = defaultNoTrials;
@@ -74,11 +74,11 @@ public class HierarchicalPartitioning implements Partitioner {
 		Preconditions.checkArgument(trials>0,"Need to provide a positive number");
 		noTrials = trials;
 	}
-	
+
 	public int getNoPartitioningTrials() {
 		return noTrials;
-	}	
-	
+	}
+
 	public double getBalanceExponent() {
 		return balanceExponent;
 	}
@@ -89,18 +89,18 @@ public class HierarchicalPartitioning implements Partitioner {
 
 	public static final int coarseSizeThreshold(int noPartitions) {
 		double alpha =  Math.pow(1.0/noPartitions,0.75);
-		return (int)Math.round(alpha * (initialMultiple*noPartitions) + 
-				(1-alpha) * (finalMultiple * noPartitions));	
+		return (int)Math.round(alpha * (initialMultiple*noPartitions) +
+				(1-alpha) * (finalMultiple * noPartitions));
 	}
-	
+
 	@Override
 	public int getSize() {
 		return noPartitions;
 	}
-	
+
 	@Override
 	public void setSize(int size) {
-		noPartitions=size;	
+		noPartitions=size;
 	}
 
 	@Override
@@ -113,16 +113,6 @@ public class HierarchicalPartitioning implements Partitioner {
 		partition(g, nodes,rweight,partition);
 		return partition;
 	}
-	
-//	private static final Iterable<Node> convertSuperNode(Iterable<SuperNode> supernodes) {
-//		return Iterables.transform(supernodes, new Function<SuperNode,Node>() {
-//			@Override
-//			public Node apply(SuperNode input) {
-//				return input.getSuperNode();
-//			}
-//		
-//		});
-//	}
 
 	@Override
 	public double partition(Graph g, Iterable<? extends Node> nodes,
@@ -132,20 +122,20 @@ public class HierarchicalPartitioning implements Partitioner {
 
 	public double partition(Graph g, Iterable<? extends Node> nodes,
 			RelationshipWeighter rweight, NodeWeighter nweight, List<? extends Collection<Node>> partition) {
-		if (partition==null || partition.size()!=noPartitions) 
+		if (partition==null || partition.size()!=noPartitions)
 			throw new IllegalArgumentException("Partition container does not have the right size - expected: " + noPartitions);
 		for (int i=0;i<noPartitions;i++) Preconditions.checkNotNull(partition.get(i));
-		
+
 		log.debug("Partitioning into {} blocks with {} trials", noPartitions,noTrials);
-		
+
 		int level = 1;
 		int sizeThreshold = coarseSizeThreshold(noPartitions);
 		CoarseningResult coarsening = coarsen(g, nodes, nweight, rweight,level);
 		Map<Node,SuperNode> coarsemap = coarsening.map;
-		
+
 		log.debug("New Size: {} | Shrinkage: {}",coarsening.getNoSuperNodes(),coarsening.getShrinkageFactor());
-		
-		while (coarsening.getNoSuperNodes()>sizeThreshold && 
+
+		while (coarsening.getNoSuperNodes()>sizeThreshold &&
 				coarsening.getShrinkageFactor()<=shrinkingThreshold) {
 			//Keep coarsening
 			level++;
@@ -158,15 +148,15 @@ public class HierarchicalPartitioning implements Partitioner {
 			}
 			coarsemap = newcoarsemap;
 			coarsening = nextCoarse;
-			log.debug("New Size: {} | Shrinkage: {}",coarsening.getNoSuperNodes(),coarsening.getShrinkageFactor());			
+			log.debug("New Size: {} | Shrinkage: {}",coarsening.getNoSuperNodes(),coarsening.getShrinkageFactor());
 		}
 		//Now partition
 		Set<Node> topnodes = coarsening.getSuperNodes();
-		
+
 		Map<Node,Integer> bestAssign = null;
 		double bestEdgeCut = Double.POSITIVE_INFINITY;
 		double bestBalance = Double.POSITIVE_INFINITY;
-		
+
 		for (int trial=1; trial<=noTrials; trial++) {
 			Map<Node,Integer> pAssign = new HashMap<Node,Integer>();
 			List<Map<Node, Double>> pnghs = new ArrayList<Map<Node, Double>>(noPartitions);
@@ -203,24 +193,9 @@ public class HierarchicalPartitioning implements Partitioner {
 							coarsening.nweight,coarsening.rweight);
 				}
 			}
-//			while(true) {
-//				int pid = findMinPartitionBlock(pweights,pnghs);
-//				if (pid<0) break;
-//				Node n = findMostConnected(pnghs.get(pid));
-//				assert !pAssign.containsKey(n);
-//				edgeCut += assign(n,pid,pweights,pAssign,pnghs,
-//						coarsening.nweight,coarsening.rweight);
-//			}
-			//check whether any node has not yet been assigned
-//			for (Node n : topnodes) {
-//				if (!pAssign.containsKey(n)) {
-//					int pid = indexOfMin(pweights);
-//					pAssign.put(n, pid);
-//					pweights[pid]+= coarsening.nweight.getWeight(n);
-//				}
-//			}
+
 			double balance = stdDev(pweights);
-			
+
 			log.debug("Current partitions edge cut: {} | Balance : {}",edgeCut,balance);
 			//find best partition
 			if (partitionEvaluation(edgeCut,balance)<partitionEvaluation(bestEdgeCut,bestBalance)) {
@@ -229,27 +204,27 @@ public class HierarchicalPartitioning implements Partitioner {
 				bestAssign = pAssign;
 			}
 		}
-		
+
 		if (bestAssign==null)
 			throw new IllegalArgumentException("No feasible partition could be found!");
-		
+
 		//Use coarsemap to find partition
 		for (Map.Entry<Node, SuperNode> entry : coarsemap.entrySet()) {
 			Node node = entry.getKey();
 			int pid = bestAssign.get(entry.getValue().getRepresentationNode());
 			partition.get(pid).add(node);
 		}
-		
+
 		return bestEdgeCut;
 	}
-	
+
 	private final double partitionEvaluation(double edgeCut, double balance) {
 		if (edgeCut < 5)
 			return 10e30;
 		else
 			return edgeCut+Math.pow(balance,balanceExponent);
 	}
-	
+
 	private static final int findMinPartitionBlock(double[] pweights, List<Map<Node, Double>> neighborhoods) {
 		int index = -1;
 		for (int i=0;i<pweights.length;i++) {
@@ -259,7 +234,7 @@ public class HierarchicalPartitioning implements Partitioner {
 		}
 		return index;
 	}
-	
+
 	private static final Node findMostConnected(Map<Node, Double> neighborhood) {
 		Node bestNode = null;
 		double bestValue = Double.NEGATIVE_INFINITY;
@@ -271,12 +246,12 @@ public class HierarchicalPartitioning implements Partitioner {
 		}
 		return bestNode;
 	}
-	
-	private static final double assign(Node n, int pid, double[] pweights, Map<Node,Integer> pAssign, 
+
+	private static final double assign(Node n, int pid, double[] pweights, Map<Node,Integer> pAssign,
 			List<Map<Node, Double>> neighborhoods, NodeWeighter nweight, RelationshipWeighter rweight) {
 		pAssign.put(n, pid);
 		pweights[pid]+= nweight.getWeight(n);
-		
+
 		double incEdgeCut = 0.0;
 		Map<Node, Double> nghs = neighborhoods.get(pid);
 		//Update neighborhoods and compute edge cut
@@ -297,20 +272,20 @@ public class HierarchicalPartitioning implements Partitioner {
 		return incEdgeCut;
 	}
 
-	private static final double evaluateNeighbor(Node node, Relationship rel, Node neighbor, 
+	private static final double evaluateNeighbor(Node node, Relationship rel, Node neighbor,
 			NodeWeighter nweight, RelationshipWeighter rweight, Set<Node> visited) {
 		return rweight.getWeight(rel)/Math.pow(nweight.getWeight(neighbor),0.5);
 	}
-	
-	private CoarseningResult coarsen(Graph g, Iterable<? extends Node> nodes, NodeWeighter nweight, 
+
+	private CoarseningResult coarsen(Graph g, Iterable<? extends Node> nodes, NodeWeighter nweight,
 			RelationshipWeighter rweight, int level) {
-		
+
 		CoarseningResult result = new CoarseningResult();
 
 		result.g = g;
-		
+
 		List<SuperNode> supernodes = new ArrayList<SuperNode>();
-		
+
 		for (Node node : nodes) {
 			if (result.map.containsKey(node)) continue;
 			result.noBaseNodes++;
@@ -346,25 +321,25 @@ public class HierarchicalPartitioning implements Partitioner {
 				supernodes.add(sup);
 
 			}
-			
+
 		}
 
 		/* Constructs new graph for coarsening */
 		result.rweight = createCoarseGraph(result.g, supernodes, result.map, rweight);
 		result.nweight = new PropertyNodeWeighter(weightType);
-		
+
 		return result;
 	}
-	
+
 	protected static HashRelationshipWeighter createCoarseGraph(Graph g,
 			Iterable<SuperNode> supernodes, Map<Node,SuperNode> assign,
 			RelationshipWeighter rweight) {
-		
+
 		g.createRelationshipType(relType);
 		g.createPropertyType(weightType, Double.class);
 		HashRelationshipWeighter relWeighter = new HashRelationshipWeighter();
-		
-		
+
+
 		for (SuperNode snode : supernodes) {
 			Map<Node, Double> acc = new HashMap<Node, Double>();
 			for (int ch=0;ch<snode.getNoChildren();ch++) {
@@ -389,7 +364,7 @@ public class HierarchicalPartitioning implements Partitioner {
 		}
 		return relWeighter;
 	}
-	
+
 	private double stdDev(double[] values) {
 		double sum = 0.0;
 		double sumOfSquares = 0.0;
@@ -399,7 +374,7 @@ public class HierarchicalPartitioning implements Partitioner {
 		}
 		return Math.sqrt((sumOfSquares - Math.pow(sum, 2) / values.length) / values.length);
 	}
-	
+
 	private class ConstantOneNodeWeighter implements NodeWeighter {
 		@Override
 		public double getWeight(Node n) {

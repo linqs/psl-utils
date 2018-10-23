@@ -25,33 +25,33 @@ import org.linqs.psl.model.term.StringAttribute;
 
 public class SubStringSimilarity implements ExternalFunction {
 
-	@Override
-	public int getArity() {
-		return 2;
-	}
+    @Override
+    public int getArity() {
+        return 2;
+    }
 
-	@Override
-	public ConstantType[] getArgumentTypes() {
-		return new ConstantType[] {ConstantType.String, ConstantType.String};
-	}
+    @Override
+    public ConstantType[] getArgumentTypes() {
+        return new ConstantType[] {ConstantType.String, ConstantType.String};
+    }
 
-	@Override
-	public double getValue(ReadableDatabase db, Constant... args) {
-		String a = ((StringAttribute) args[0]).getValue();
-		String b = ((StringAttribute) args[1]).getValue();
-		String s1,s2;
-		if (a.length()<b.length()) {
-			s1 = a; s2 = b;
-		} else {
-			s1 = b; s2 = a;
-		}
-		s1 = s1.toLowerCase(); s2 = s2.toLowerCase();
-		int index = s2.indexOf(s1, 0);
-		if (index<0) return 0.0;
-		else {
-			return s1.length()*1.0/s2.length();
-		}
-	}
+    @Override
+    public double getValue(ReadableDatabase db, Constant... args) {
+        String a = ((StringAttribute) args[0]).getValue();
+        String b = ((StringAttribute) args[1]).getValue();
+        String s1,s2;
+        if (a.length()<b.length()) {
+            s1 = a; s2 = b;
+        } else {
+            s1 = b; s2 = a;
+        }
+        s1 = s1.toLowerCase(); s2 = s2.toLowerCase();
+        int index = s2.indexOf(s1, 0);
+        if (index<0) return 0.0;
+        else {
+            return s1.length()*1.0/s2.length();
+        }
+    }
 
 
 }

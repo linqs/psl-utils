@@ -23,9 +23,9 @@ import org.linqs.psl.utils.graph.memory.MemoryGraph;
 
 public class MemoryGraphTest extends GraphContractTest {
 
-	@Override
-	protected Graph getGraphImplementation() {
-		return new MemoryGraph();
-	}
+    @Override
+    protected Graph getGraphImplementation() {
+        return new MemoryGraph();
+    }
 
 }

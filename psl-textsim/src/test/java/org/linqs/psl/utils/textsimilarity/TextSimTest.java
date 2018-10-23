@@ -32,18 +32,18 @@ import org.junit.Test;
  * All ExternalFunction's used in these tests should ignore the first (database) parameter to getValue().
  */
 public abstract class TextSimTest {
-	public static final double EPSILON = 0.00001;
+    public static final double EPSILON = 0.00001;
 
-	/**
-	 * Call the similarity method directly on all the inputs.
-	 */
-	public void directTest(ExternalFunction fun, String[] a, String[] b, double[] expected) {
-		assertEquals(a.length, expected.length);
-		assertEquals(b.length, expected.length);
+    /**
+     * Call the similarity method directly on all the inputs.
+     */
+    public void directTest(ExternalFunction fun, String[] a, String[] b, double[] expected) {
+        assertEquals(a.length, expected.length);
+        assertEquals(b.length, expected.length);
 
-		for (int i = 0; i < a.length; i++) {
-			double actual = fun.getValue(null, new StringAttribute(a[i]), new StringAttribute(b[i]));
-			assertEquals(expected[i], actual, EPSILON);
-		}
-	}
+        for (int i = 0; i < a.length; i++) {
+            double actual = fun.getValue(null, new StringAttribute(a[i]), new StringAttribute(b[i]));
+            assertEquals(expected[i], actual, EPSILON);
+        }
+    }
 }

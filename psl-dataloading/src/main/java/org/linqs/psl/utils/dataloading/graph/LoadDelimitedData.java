@@ -27,40 +27,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LoadDelimitedData {
-	public static final String defaultDelimiter = "\t";
+    public static final String defaultDelimiter = "\t";
 
-	private static final Logger log = LoggerFactory.getLogger(LoadDelimitedData.class);
-	private static final String commentPrefix = "//";
+    private static final Logger log = LoggerFactory.getLogger(LoadDelimitedData.class);
+    private static final String commentPrefix = "//";
 
-	public static<O> List<O> loadTabData(String fileName, DelimitedObjectConstructor<O> loader) {
-		return loadTabData(fileName,loader,defaultDelimiter);
-	}
+    public static<O> List<O> loadTabData(String fileName, DelimitedObjectConstructor<O> loader) {
+        return loadTabData(fileName,loader,defaultDelimiter);
+    }
 
-	public static<O> List<O> loadTabData(String fileName, DelimitedObjectConstructor<O> loader, String delim) {
-		List<O> result = new ArrayList<O>();
-		try {
-			BufferedReader in  = new BufferedReader(new FileReader(fileName));
-			String line = "";
-			int lineNr = 0;
-			while ((line = in.readLine())!= null){
-				lineNr++;
-				line = line.trim();
-				if (line.isEmpty()) continue;
-				if (line.startsWith(commentPrefix)) continue;
+    public static<O> List<O> loadTabData(String fileName, DelimitedObjectConstructor<O> loader, String delim) {
+        List<O> result = new ArrayList<O>();
+        try {
+            BufferedReader in  = new BufferedReader(new FileReader(fileName));
+            String line = "";
+            int lineNr = 0;
+            while ((line = in.readLine())!= null){
+                lineNr++;
+                line = line.trim();
+                if (line.isEmpty()) continue;
+                if (line.startsWith(commentPrefix)) continue;
 
-				String[] data = line.split(delim);
-				if (loader.length()>0 && data.length != loader.length()) {
-					log.warn("Could not parse line #{} (contents='{}') from file: "+fileName,lineNr,line);
-					continue;
-				}
-				O obj = loader.create(data);
-				if (obj!=null) result.add(obj);
+                String[] data = line.split(delim);
+                if (loader.length()>0 && data.length != loader.length()) {
+                    log.warn("Could not parse line #{} (contents='{}') from file: "+fileName,lineNr,line);
+                    continue;
+                }
+                O obj = loader.create(data);
+                if (obj!=null) result.add(obj);
 
-			}
-			in.close();
-		} catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		return result;
-	}
+            }
+            in.close();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        return result;
+    }
 }

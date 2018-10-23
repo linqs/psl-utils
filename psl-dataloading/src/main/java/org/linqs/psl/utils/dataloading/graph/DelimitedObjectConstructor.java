@@ -18,18 +18,18 @@
 package org.linqs.psl.utils.dataloading.graph;
 
 public interface DelimitedObjectConstructor<O extends Object> {
-	public static Filter NoFilter = new Filter() {
-		@Override
-		public boolean include(String[] data) {
-			return true;
-		}
-	};
+    public static Filter NoFilter = new Filter() {
+        @Override
+        public boolean include(String[] data) {
+            return true;
+        }
+    };
 
-	public static interface Filter {
-		public boolean include(String[] data);
-	}
+    public static interface Filter {
+        public boolean include(String[] data);
+    }
 
-	public O create(String[] data);
+    public O create(String[] data);
 
-	public int length();
+    public int length();
 }

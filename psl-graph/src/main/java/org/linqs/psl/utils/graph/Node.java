@@ -20,40 +20,40 @@ package org.linqs.psl.utils.graph;
 import java.util.Iterator;
 
 public interface Node {
-	
-	public Property createProperty(String type, Object attribute);
-	
-	public Relationship createRelationship(String type, Node n);
-	 
-	public Object getAttribute(String type);
-	 
-	public <O> O getAttribute(String type, Class<O> c);
 
-	public Iterator<? extends Edge> getEdgeIterator();
-	 
-	public Iterable<? extends Edge> getEdges();
+    public Property createProperty(String type, Object attribute);
 
-	public int getNoEdges();
-	 
-	public int getNoProperties();
-	 
-	public int getNoRelationships();
-	 
-	public Iterator<? extends Property> getPropertyIterator();
+    public Relationship createRelationship(String type, Node n);
 
-	public Iterable<? extends Property> getProperties();
-	 
-	public Iterator<? extends Property> getPropertyIterator(String type);
-	 
-	public Iterable<? extends Property> getProperties(String type);
-	 
-	public Iterator<? extends Relationship> getRelationshipIterator();
+    public Object getAttribute(String type);
 
-	public Iterable<? extends Relationship> getRelationships();
-	 
-	public Iterator<? extends Relationship> getRelationshipIterator(String type);
-	 
-	public Iterable<? extends Relationship> getRelationships(String type);
-	
-	public void delete();
+    public <O> O getAttribute(String type, Class<O> c);
+
+    public Iterator<? extends Edge> getEdgeIterator();
+
+    public Iterable<? extends Edge> getEdges();
+
+    public int getNoEdges();
+
+    public int getNoProperties();
+
+    public int getNoRelationships();
+
+    public Iterator<? extends Property> getPropertyIterator();
+
+    public Iterable<? extends Property> getProperties();
+
+    public Iterator<? extends Property> getPropertyIterator(String type);
+
+    public Iterable<? extends Property> getProperties(String type);
+
+    public Iterator<? extends Relationship> getRelationshipIterator();
+
+    public Iterable<? extends Relationship> getRelationships();
+
+    public Iterator<? extends Relationship> getRelationshipIterator(String type);
+
+    public Iterable<? extends Relationship> getRelationships(String type);
+
+    public void delete();
 }

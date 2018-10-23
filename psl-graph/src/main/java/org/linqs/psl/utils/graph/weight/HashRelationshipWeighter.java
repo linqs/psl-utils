@@ -23,19 +23,19 @@ import java.util.Map;
 import org.linqs.psl.utils.graph.Relationship;
 
 public class HashRelationshipWeighter implements RelationshipWeighter {
-	
-	private Map<Relationship, Double> weights;
-	
-	public HashRelationshipWeighter() {
-		weights = new HashMap<Relationship, Double>();
-	}
 
-	@Override
-	public double getWeight(Relationship r) {
-		return weights.get(r);
-	}
-	
-	public void setWeight(Relationship r, Double w) {
-		weights.put(r, w);
-	}
+    private Map<Relationship, Double> weights;
+
+    public HashRelationshipWeighter() {
+        weights = new HashMap<Relationship, Double>();
+    }
+
+    @Override
+    public double getWeight(Relationship r) {
+        return weights.get(r);
+    }
+
+    public void setWeight(Relationship r, Double w) {
+        weights.put(r, w);
+    }
 }

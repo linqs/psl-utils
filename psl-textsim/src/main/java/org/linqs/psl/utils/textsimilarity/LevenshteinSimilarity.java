@@ -26,53 +26,53 @@ import org.linqs.psl.model.term.StringAttribute;
 
 public class LevenshteinSimilarity implements ExternalFunction {
 
-	/**
-	 * String for which the similarity computed by the metrics is below this
-	 * threshold are considered to NOT be similar and hence 0 is returned as a
-	 * truth value.
-	 */
-	private static final double defaultSimilarityThreshold = 0.5;
+    /**
+     * String for which the similarity computed by the metrics is below this
+     * threshold are considered to NOT be similar and hence 0 is returned as a
+     * truth value.
+     */
+    private static final double defaultSimilarityThreshold = 0.5;
 
-	private final double similarityThreshold;
+    private final double similarityThreshold;
 
-	public LevenshteinSimilarity() {
-		this(defaultSimilarityThreshold);
-	}
+    public LevenshteinSimilarity() {
+        this(defaultSimilarityThreshold);
+    }
 
-	public LevenshteinSimilarity(double threshold) {
-		similarityThreshold = threshold;
-	}
+    public LevenshteinSimilarity(double threshold) {
+        similarityThreshold = threshold;
+    }
 
-	@Override
-	public int getArity() {
-		return 2;
-	}
+    @Override
+    public int getArity() {
+        return 2;
+    }
 
-	@Override
-	public ConstantType[] getArgumentTypes() {
-		return new ConstantType[] {ConstantType.String, ConstantType.String};
-	}
+    @Override
+    public ConstantType[] getArgumentTypes() {
+        return new ConstantType[] {ConstantType.String, ConstantType.String};
+    }
 
-	@Override
-	public double getValue(ReadableDatabase db, Constant... args) {
+    @Override
+    public double getValue(ReadableDatabase db, Constant... args) {
 
-		String a = ((StringAttribute) args[0]).getValue();
-		String b = ((StringAttribute) args[1]).getValue();
+        String a = ((StringAttribute) args[0]).getValue();
+        String b = ((StringAttribute) args[1]).getValue();
 
-		int maxLen = Math.max(a.length(), b.length());
-		if (maxLen == 0)
-			return 1.0;
+        int maxLen = Math.max(a.length(), b.length());
+        if (maxLen == 0)
+            return 1.0;
 
-		double ldist = StringUtils.getLevenshteinDistance(a, b);
-		double sim = 1.0 - (ldist / maxLen);
+        double ldist = StringUtils.getLevenshteinDistance(a, b);
+        double sim = 1.0 - (ldist / maxLen);
 
-		if (sim > similarityThreshold)
-			return sim;
+        if (sim > similarityThreshold)
+            return sim;
 
-		return 0.0;
-	}
+        return 0.0;
+    }
 
-	public String toString() {
-		return "Levenstein String Similarity";
-	}
+    public String toString() {
+        return "Levenstein String Similarity";
+    }
 }

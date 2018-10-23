@@ -29,30 +29,30 @@ import org.linqs.psl.utils.graph.weight.RelationshipWeighter;
 
 class CoarseningResult {
 
-	final Map<Node,SuperNode> map = new HashMap<Node,SuperNode>();
-	RelationshipWeighter rweight = null;
-	NodeWeighter nweight = null;
-	Graph g = null;
-	
-	private int noSuperNodes = 0;
-	private final Set<Node> superNodes = new HashSet<Node>();
-	
-	int noBaseNodes = 0;
-	
-	double getShrinkageFactor() {
-		return (1.0*noSuperNodes)/noBaseNodes;
-	}
-	
-	int getNoSuperNodes() {
-		return noSuperNodes;
-	}
-	
-	void addSuperNode(SuperNode n) {
-		if (superNodes.add(n.getRepresentationNode())) noSuperNodes++;
-	}
-	
-	Set<Node> getSuperNodes() {
-		return superNodes;
-	}
-	
+    final Map<Node,SuperNode> map = new HashMap<Node,SuperNode>();
+    RelationshipWeighter rweight = null;
+    NodeWeighter nweight = null;
+    Graph g = null;
+
+    private int noSuperNodes = 0;
+    private final Set<Node> superNodes = new HashSet<Node>();
+
+    int noBaseNodes = 0;
+
+    double getShrinkageFactor() {
+        return (1.0*noSuperNodes)/noBaseNodes;
+    }
+
+    int getNoSuperNodes() {
+        return noSuperNodes;
+    }
+
+    void addSuperNode(SuperNode n) {
+        if (superNodes.add(n.getRepresentationNode())) noSuperNodes++;
+    }
+
+    Set<Node> getSuperNodes() {
+        return superNodes;
+    }
+
 }

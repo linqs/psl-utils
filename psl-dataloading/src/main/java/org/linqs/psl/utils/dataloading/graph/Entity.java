@@ -29,79 +29,79 @@ import com.google.common.collect.SetMultimap;
 
 public class Entity<ET extends EntityType, RT extends RelationType> extends HasAttributes {
 
-	private final int id;
-	private final ET type;
-	
-	
-	private final SetMultimap<RT,Relation<ET,RT>> relations;
-	
-	Entity(int _id, ET _type) {
-		super(_type.hasAttributes());
-		id = _id;
-		type = _type;
-		relations = HashMultimap.create();
-	}
+    private final int id;
+    private final ET type;
 
-	public int getId() {
-		return id;
-	}
 
-	public ET getType() {
-		return type;
-	}
-	
-	public int getDegree() {
-		return relations.size();
-	}
-	
-	public boolean addRelation(Relation<ET,RT> rel) {
-		return relations.put(rel.getType(), rel);
-	}
-	
-	public Set<Relation<ET,RT>> getRelations(RT relType) {
-		return relations.get(relType);
-	}
-	
-	public Iterable<Relation<ET,RT>> getRelations(RT relType, final Subgraph<ET,RT> subgraph) {
-		return Iterables.filter(relations.get(relType), new Predicate<Relation<ET,RT>>() {
-			@Override
-			public boolean apply(Relation<ET, RT> rel) {
-				return subgraph.containsRelation(rel);
-			}
-			
-		});
-	}
-		
-	public Collection<Relation<ET,RT>> getAllRelations() {
-		return relations.values();
-	}
-	
-	public Iterable<Relation<ET,RT>> getAllRelations(final Subgraph<ET,RT> subgraph) {
-		return Iterables.filter(relations.values(), new Predicate<Relation<ET,RT>>() {
-			@Override
-			public boolean apply(Relation<ET, RT> rel) {
-				return subgraph.containsRelation(rel);
-			}
-			
-		});
-	}
-	
-	public boolean hasType(ET _type) {
-		return type.equals(_type);
-	}
-	
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder().append(id).append(type).toHashCode();
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean equals(Object oth) {
-		if (this==oth) return true;
-		if (oth==null || !getClass().isInstance(oth)) return false;
-		Entity<ET,RT> e = (Entity<ET,RT>)oth;
-		return id==e.id && type.equals(e.type);
-	}
-	
+    private final SetMultimap<RT,Relation<ET,RT>> relations;
+
+    Entity(int _id, ET _type) {
+        super(_type.hasAttributes());
+        id = _id;
+        type = _type;
+        relations = HashMultimap.create();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public ET getType() {
+        return type;
+    }
+
+    public int getDegree() {
+        return relations.size();
+    }
+
+    public boolean addRelation(Relation<ET,RT> rel) {
+        return relations.put(rel.getType(), rel);
+    }
+
+    public Set<Relation<ET,RT>> getRelations(RT relType) {
+        return relations.get(relType);
+    }
+
+    public Iterable<Relation<ET,RT>> getRelations(RT relType, final Subgraph<ET,RT> subgraph) {
+        return Iterables.filter(relations.get(relType), new Predicate<Relation<ET,RT>>() {
+            @Override
+            public boolean apply(Relation<ET, RT> rel) {
+                return subgraph.containsRelation(rel);
+            }
+
+        });
+    }
+
+    public Collection<Relation<ET,RT>> getAllRelations() {
+        return relations.values();
+    }
+
+    public Iterable<Relation<ET,RT>> getAllRelations(final Subgraph<ET,RT> subgraph) {
+        return Iterables.filter(relations.values(), new Predicate<Relation<ET,RT>>() {
+            @Override
+            public boolean apply(Relation<ET, RT> rel) {
+                return subgraph.containsRelation(rel);
+            }
+
+        });
+    }
+
+    public boolean hasType(ET _type) {
+        return type.equals(_type);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(id).append(type).toHashCode();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean equals(Object oth) {
+        if (this==oth) return true;
+        if (oth==null || !getClass().isInstance(oth)) return false;
+        Entity<ET,RT> e = (Entity<ET,RT>)oth;
+        return id==e.id && type.equals(e.type);
+    }
+
 }

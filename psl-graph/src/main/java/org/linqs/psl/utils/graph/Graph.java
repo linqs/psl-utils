@@ -20,13 +20,13 @@ package org.linqs.psl.utils.graph;
 import java.util.Set;
 
 public interface Graph {
-	public Node createNode();
-	
-	public void createPropertyType(String name, Class<?> type);
-	
-	public void createRelationshipType(String name);
-	
-	public Iterable<? extends Node> getNodeSnapshot();
-	
-	public Set<Node> getNodeSnapshotByAttribute(String propertyType, Object attribute);
+    public Node createNode();
+
+    public void createPropertyType(String name, Class<?> type);
+
+    public void createRelationshipType(String name);
+
+    public Iterable<? extends Node> getNodeSnapshot();
+
+    public Set<Node> getNodeSnapshotByAttribute(String propertyType, Object attribute);
 }

@@ -28,32 +28,32 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class DiceSimilarityTest extends TextSimTest {
-	@Test
-	public void testBase() {
-		ExternalFunction fun = new DiceSimilarity(0.0);
+    @Test
+    public void testBase() {
+        ExternalFunction fun = new DiceSimilarity(0.0);
 
-		String[] a = new String[]{
-			"A B C D",
-			"A B C D",
-			"A B C D",
-			"A B C D",
-		};
+        String[] a = new String[]{
+            "A B C D",
+            "A B C D",
+            "A B C D",
+            "A B C D",
+        };
 
-		String[] b = new String[]{
-			"A B C D",
-			"A B C",
-			"A B",
-			"A",  // No Bigrams
-		};
+        String[] b = new String[]{
+            "A B C D",
+            "A B C",
+            "A B",
+            "A",  // No Bigrams
+        };
 
-		// Remember, we are using bigrams.
-		double[] expected = new double[]{
-			1.0,
-			0.80,
-			0.50,
-			0.0,
-		};
+        // Remember, we are using bigrams.
+        double[] expected = new double[]{
+            1.0,
+            0.80,
+            0.50,
+            0.0,
+        };
 
-		directTest(fun, a, b, expected);
-	}
+        directTest(fun, a, b, expected);
+    }
 }

@@ -25,69 +25,69 @@ import org.linqs.psl.utils.graph.Node;
 import org.linqs.psl.utils.graph.Relationship;
 
 public class MemoryRelationship extends MemoryEdge implements Relationship {
-	
-	final MemoryNode endNode;
-	final private Integer relationshipType;
 
-	MemoryRelationship(MemoryGraph g, Integer rt, MemoryNode start, MemoryNode end) {
-		super(g, start);
-		endNode = end;
-		relationshipType = rt;
-	}
+    final MemoryNode endNode;
+    final private Integer relationshipType;
 
-	@Override
-	public boolean isProperty() {
-		return false;
-	}
+    MemoryRelationship(MemoryGraph g, Integer rt, MemoryNode start, MemoryNode end) {
+        super(g, start);
+        endNode = end;
+        relationshipType = rt;
+    }
 
-	@Override
-	public boolean isRelationship() {
-		return true;
-	}
+    @Override
+    public boolean isProperty() {
+        return false;
+    }
 
-	@Override
-	public Node getEnd() {
-		return endNode;
-	}
+    @Override
+    public boolean isRelationship() {
+        return true;
+    }
 
-	@Override
-	public Node getOtherNode(Node n) {
-		if (startNode.equals(n))
-			return getEnd();
-		else if (endNode.equals(n))
-			return getStart();
-		else
-			throw new IllegalArgumentException("Node is not incident on this edge.");
-	}
+    @Override
+    public Node getEnd() {
+        return endNode;
+    }
 
-	@Override
-	public String getRelationshipType() {
-		return graph.getRelationshipTypeName(relationshipType);
-	}
+    @Override
+    public Node getOtherNode(Node n) {
+        if (startNode.equals(n))
+            return getEnd();
+        else if (endNode.equals(n))
+            return getStart();
+        else
+            throw new IllegalArgumentException("Node is not incident on this edge.");
+    }
 
-	@Override
-	public boolean isSelfLoop(Node node) {
-		return startNode.equals(endNode);
-	}
+    @Override
+    public String getRelationshipType() {
+        return graph.getRelationshipTypeName(relationshipType);
+    }
 
-	@Override
-	public boolean isIncidentOn(Node n) {
-		return startNode.equals(n) || endNode.equals(n);
-	}
+    @Override
+    public boolean isSelfLoop(Node node) {
+        return startNode.equals(endNode);
+    }
 
-	@Override
-	public Collection<? extends Node> getNodes() {
-		List<MemoryNode> nodes = new ArrayList<MemoryNode>(2);
-		nodes.add(startNode);
-		nodes.add(endNode);
-		return nodes;
-	}
+    @Override
+    public boolean isIncidentOn(Node n) {
+        return startNode.equals(n) || endNode.equals(n);
+    }
 
-	@Override
-	public void delete() {
-		startNode.notifyRelationshipDeleted(this);
-		endNode.notifyRelationshipDeleted(this);
-		super.delete();
-	}
-	
+    @Override
+    public Collection<? extends Node> getNodes() {
+        List<MemoryNode> nodes = new ArrayList<MemoryNode>(2);
+        nodes.add(startNode);
+        nodes.add(endNode);
+        return nodes;
+    }
+
+    @Override
+    public void delete() {
+        startNode.notifyRelationshipDeleted(this);
+        endNode.notifyRelationshipDeleted(this);
+        super.delete();
+    }
+
 }

@@ -32,40 +32,40 @@ import com.wcohen.ss.Level2JaroWinkler;
  * If the similarity is below a threshold (default=0.5) it returns 0.
  */
 public class Level2JaroWinklerSimilarity implements ExternalFunction {
-	// similarity threshold (default=0.5)
-	private double simThresh;
+    // similarity threshold (default=0.5)
+    private double simThresh;
 
-	// constructors
-	public Level2JaroWinklerSimilarity() {
-		this.simThresh = 0.5;
-	}
-	public Level2JaroWinklerSimilarity(double simThresh) {
-		this.simThresh = simThresh;
-	}
+    // constructors
+    public Level2JaroWinklerSimilarity() {
+        this.simThresh = 0.5;
+    }
+    public Level2JaroWinklerSimilarity(double simThresh) {
+        this.simThresh = simThresh;
+    }
 
-	@Override
-	public int getArity() {
-		return 2;
-	}
+    @Override
+    public int getArity() {
+        return 2;
+    }
 
-	@Override
-	public ConstantType[] getArgumentTypes() {
-		return new ConstantType[] { ConstantType.String, ConstantType.String };
-	}
+    @Override
+    public ConstantType[] getArgumentTypes() {
+        return new ConstantType[] { ConstantType.String, ConstantType.String };
+    }
 
-	@Override
-	public double getValue(ReadableDatabase db, Constant... args) {
-		String a = ((StringAttribute) args[0]).getValue();
-		String b = ((StringAttribute) args[1]).getValue();
-		BasicStringWrapper aWrapped = new BasicStringWrapper(a);
-		BasicStringWrapper bWrapped = new BasicStringWrapper(b);
+    @Override
+    public double getValue(ReadableDatabase db, Constant... args) {
+        String a = ((StringAttribute) args[0]).getValue();
+        String b = ((StringAttribute) args[1]).getValue();
+        BasicStringWrapper aWrapped = new BasicStringWrapper(a);
+        BasicStringWrapper bWrapped = new BasicStringWrapper(b);
 
-		Level2JaroWinkler l2jaroW = new Level2JaroWinkler();
-		double sim = l2jaroW.score(aWrapped, bWrapped);
+        Level2JaroWinkler l2jaroW = new Level2JaroWinkler();
+        double sim = l2jaroW.score(aWrapped, bWrapped);
 
-		if (sim < simThresh)
-			return 0.0;
-		else
-			return sim;
-	 }
+        if (sim < simThresh)
+            return 0.0;
+        else
+            return sim;
+     }
 }

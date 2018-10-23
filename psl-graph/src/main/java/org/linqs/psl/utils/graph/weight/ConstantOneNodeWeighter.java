@@ -21,9 +21,9 @@ import org.linqs.psl.utils.graph.Node;
 
 public class ConstantOneNodeWeighter implements NodeWeighter {
 
-	@Override
-	public double getWeight(Node n) {
-		return 1;
-	}
+    @Override
+    public double getWeight(Node n) {
+        return 1;
+    }
 
 }

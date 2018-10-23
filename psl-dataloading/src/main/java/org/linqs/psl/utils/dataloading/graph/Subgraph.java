@@ -24,44 +24,44 @@ import com.google.common.collect.SetMultimap;
 
 public class Subgraph<ET extends EntityType, RT extends RelationType> {
 
-	private final SetMultimap<ET,Entity<ET,RT>> entities;
-	private final SetMultimap<RT,Relation<ET,RT>> relations;
-	
-	public Subgraph() {
-		entities = HashMultimap.create();
-		relations = HashMultimap.create();
-	}
-	
-	void addEntity(Entity<ET,RT> entity) {
-		entities.put(entity.getType(), entity);
-	}
-	
-	public boolean containsEntity(Entity<ET,RT> entity) {
-		return entities.containsEntry(entity.getType(), entity);
-	}
-	
-	public int size() {
-		return entities.size();
-	}
-	
-	void addRelation(Relation<ET,RT> rel) {
-		relations.put(rel.getType(), rel);
-	}
-	
-	boolean containsRelation(Relation<ET,RT> rel) {
-		return relations.containsEntry(rel.getType(), rel);
-	}
-	
-	public Set<Entity<ET,RT>> getEntities(ET type) {
-		return entities.get(type);
-	}
-	
-	public Set<Relation<ET,RT>> getRelations(RT type) {
-		return relations.get(type);
-	}
-	
-	Collection<Entity<ET,RT>> getAllEntities() {
-		return entities.values();
-	}
-	
+    private final SetMultimap<ET,Entity<ET,RT>> entities;
+    private final SetMultimap<RT,Relation<ET,RT>> relations;
+
+    public Subgraph() {
+        entities = HashMultimap.create();
+        relations = HashMultimap.create();
+    }
+
+    void addEntity(Entity<ET,RT> entity) {
+        entities.put(entity.getType(), entity);
+    }
+
+    public boolean containsEntity(Entity<ET,RT> entity) {
+        return entities.containsEntry(entity.getType(), entity);
+    }
+
+    public int size() {
+        return entities.size();
+    }
+
+    void addRelation(Relation<ET,RT> rel) {
+        relations.put(rel.getType(), rel);
+    }
+
+    boolean containsRelation(Relation<ET,RT> rel) {
+        return relations.containsEntry(rel.getType(), rel);
+    }
+
+    public Set<Entity<ET,RT>> getEntities(ET type) {
+        return entities.get(type);
+    }
+
+    public Set<Relation<ET,RT>> getRelations(RT type) {
+        return relations.get(type);
+    }
+
+    Collection<Entity<ET,RT>> getAllEntities() {
+        return entities.values();
+    }
+
 }

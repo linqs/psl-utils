@@ -42,7 +42,6 @@
     </properties>
 
     <modules>
-        <module>psl-graph</module>
         <module>psl-textsim</module>
     </modules>
 

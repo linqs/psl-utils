@@ -17,12 +17,13 @@
  */
 package org.linqs.psl.utils.textsimilarity;
 
-import org.apache.commons.lang3.StringUtils;
 import org.linqs.psl.database.ReadableDatabase;
 import org.linqs.psl.model.function.ExternalFunction;
 import org.linqs.psl.model.term.Constant;
 import org.linqs.psl.model.term.ConstantType;
 import org.linqs.psl.model.term.StringAttribute;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class LevenshteinSimilarity implements ExternalFunction {
 
